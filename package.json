@@ -1,0 +1,32 @@
+{
+  "title": "AcceDe Web - tablist",
+  "name": "accedeweb-tablist",
+  "version": "0.0.0",
+  "description": "WAI-ARIA tablist plugin based on AcceDe Web instructions",
+  "main": "tablist.js",
+  "scripts": {
+    "test": "mocha-phantomjs ./test/accordeon.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Switch-Company/accedeweb-tablist.git"
+  },
+  "keywords": [
+    "accessibility",
+    "tablist",
+    "accordion",
+    "javascript",
+    "vanilla"
+  ],
+  "author": {
+    "name": "Switch",
+    "email": "bonjour@switch.paris",
+    "url": "http://switch.paris"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "mocha": "^2.3.3",
+    "mocha-phantomjs": "^4.0.1"
+  }
+}

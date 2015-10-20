@@ -1,0 +1,553 @@
+/*
+ *  DEMOS - ACCEDE WEB | GLOBAL STYLES
+ */
+/* normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
+html {
+  font-family: sans-serif /* 1 */;
+  -ms-text-size-adjust: 100% /* 2 */;
+  -webkit-text-size-adjust: 100% /* 2 */;
+}
+body {
+  margin: 0;
+}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+audio,
+canvas,
+progress,
+video {
+  display: inline-block /* 1 */;
+  vertical-align: baseline /* 2 */;
+}
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+[hidden],
+template {
+  display: none;
+}
+a {
+  background-color: transparent;
+}
+a:active,
+a:hover {
+  outline: 0;
+}
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+b,
+strong {
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+}
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+mark {
+  background: #ff0;
+  color: #000;
+}
+small {
+  font-size: 80%;
+}
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+img {
+  border: 0;
+}
+svg:not(:root) {
+  overflow: hidden;
+}
+figure {
+  margin: 1em 40px;
+}
+hr {
+  box-sizing: content-box;
+  height: 0;
+}
+pre {
+  overflow: auto;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit /* 1 */;
+  font: inherit /* 2 */;
+  margin: 0 /* 3 */;
+}
+button {
+  overflow: visible;
+}
+button,
+select {
+  text-transform: none;
+}
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button /* 2 */;
+  cursor: pointer /* 3 */;
+}
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+input {
+  line-height: normal;
+}
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box /* 1 */;
+  padding: 0 /* 2 */;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+input[type="search"] {
+  -webkit-appearance: textfield /* 1 */;
+  box-sizing: content-box /* 2 */;
+}
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+legend {
+  border: 0 /* 1 */;
+  padding: 0 /* 2 */;
+}
+textarea {
+  overflow: auto;
+}
+optgroup {
+  font-weight: bold;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,
+th {
+  padding: 0;
+}
+@font-face {
+  font-family: $font-site;
+  font-style: normal;
+  font-weight: normal;
+  src: url("http://cdn.switch-company.com/medias/fonts/edmondsans-regular.woff") format("woff");
+}
+@font-face {
+  font-family: $font-site;
+  font-style: normal;
+  font-weight: bold;
+  src: url("http://cdn.switch-company.com/medias/fonts/edmondsans-bold.woff") format("woff");
+}
+[class^=icon-] {
+  fill: #9b9a96;
+}
+.icon-title {
+  height: 0.75rem;
+  margin-right: 0.625rem;
+  width: 3.25rem;
+}
+.icon-page-title {
+  height: 0.75rem;
+  width: 5.25rem;
+}
+.icon-tab {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+html {
+  background: #f5eede;
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+body {
+  background: #f5eede;
+  color: #9b9a96;
+  font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman", serif;
+  font-size: 100%;
+  line-height: 1.3125;
+}
+sup {
+  top: -0.8em;
+  font-size: 55%;
+}
+a {
+  color: inherit;
+}
+.no-touchevents a:hover,
+.touchevents a:active,
+.keyboard a:focus {
+  color: #d46f61;
+}
+p {
+  line-height: 1.75;
+}
+[class^=button] {
+  -webkit-touch-callout: none;
+  background: none;
+  border-width: 0;
+  display: inline-block;
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  outline-width: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.no-touchevents [class^=button]:hover,
+.touchevents [class^=button]:active,
+.keyboard [class^=button]:focus {
+  text-decoration: none;
+}
+.button-box {
+  font-weight: 200;
+  font-size: 0.875rem;
+  letter-spacing: 0.1428571429em;
+  padding: 0.9375rem 1.5625rem;
+  border: 3px solid #fff;
+}
+.no-touchevents .button-box:hover,
+.touchevents .button-box:active,
+.keyboard .button-box:focus {
+  background-color: rgba(255,255,255,0.2);
+  color: inherit;
+}
+header[role="banner"] {
+  background-color: #fff;
+}
+.tool-container h1 {
+  color: #9b9a96;
+  display: block;
+  margin-bottom: 30px;
+  font-size: 2em;
+  font-weight: lighter;
+}
+.tool-container h1:before {
+  content: "";
+  display: inline-block;
+  background-image: url("images/beforeTitle.png");
+  background-repeat: no-repeat;
+  height: 10px;
+  margin-right: 15px;
+  vertical-align: middle;
+  width: 36px;
+}
+li {
+  list-style: none;
+}
+ul {
+  padding: 0;
+}
+.list {
+  width: 280px;
+}
+.list li {
+  color: #9b9a96;
+  display: block;
+  font-size: 1.2em;
+  font-weight: lighter;
+  margin-bottom: 22px;
+}
+.list li:hover,
+.list li>a:hover {
+  background-image: url("images/puceHover.png");
+}
+.list li>a {
+  background-image: url("images/puce.png");
+  background-position: left center;
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}
+fieldset {
+  border: none;
+  padding: 0;
+}
+label {
+  color: #9b9a96;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+}
+label:before {
+  content: "";
+  display: inline-block;
+  background-image: url("images/beforeTitle.png");
+  background-repeat: no-repeat;
+  background-size: 28px auto;
+  height: 10px;
+  margin-right: 8px;
+  vertical-align: middle;
+  width: 36px;
+}
+textarea {
+  background: none;
+}
+border: 2px solid #9b9a96 {
+  color: #9b9a96;
+  font-size: 1em;
+  font-weight: lighter;
+  margin-bottom: 10px;
+  min-height: 200px;
+  min-width: 400px;
+  padding: 10px;
+  resize: vertical;
+}
+input[type="text"] {
+  background: none;
+  border: 2px solid #9b9a96;
+  color: #9b9a96;
+  font-size: 1em;
+  font-weight: lighter;
+  margin-bottom: 10px;
+  min-width: 400px;
+  padding: 10px;
+}
+input[type='text']:focus,
+textarea:focus {
+  background-color: rgba(255,255,255,0.5);
+  outline: 0;
+}
+input:focus {
+  outline: 0;
+}
+.checkboxLabel>label {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+.cont-check {
+  position: relative;
+  display: inline-block;
+}
+vertical-align: top,
+#filesList {
+  box-sizing: border-box;
+  background-color: #fff;
+  min-height: 30px;
+  padding: 10px;
+}
+.cont-check > input {
+  position: absolute;
+  margin-left: 16px;
+  width: 50px;
+  height: 30px;
+  cursor: pointer;
+  border: none;
+  opacity: 0;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  vertical-align: middle /*pour firefox*/;
+  z-index: 10;
+}
+.cont-check > span {
+  position: absolute;
+  top: 0;
+  left: 30px;
+}
+.cont-check > span:before {
+  content: "";
+  position: absolute;
+  border-radius: 30px;
+  height: 24px;
+  width: 48px;
+  background-color: #fff;
+  -webkit-transform: translate(-25%, 0);
+          transform: translate(-25%, 0);
+  transition: all 0.25s ease-in-out;
+  box-sizing: border-box;
+}
+.cont-check > span:after {
+  content: "";
+}
+position: absolute {
+  border-radius: 30px;
+  border: 3px solid #fff;
+  width: 24px;
+  height: 24px;
+  background-color: #d7cf80;
+  -webkit-transform: translateX(12px);
+          transform: translateX(12px);
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+}
+.cont-check > input,
+.cont-check > input:checked+span:after {
+  background: #c64329;
+}
+transition: all 0.2s ease-in-out {
+  -webkit-transform: translateX(-15px);
+          transform: translateX(-15px);
+  box-sizing: border-box;
+}
+header[role=banner] .title-zone {
+  padding: 5.3125rem 0 5.3125rem;
+}
+header[role=banner] .icon-page-title {
+  margin: 0.75rem auto 0;
+  display: block;
+}
+.title-page {
+  font-family: "Edmondsans", Geneva, Verdana, "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  font-size: 4rem;
+  font-weight: normal;
+  margin: 0;
+  text-align: center;
+}
+[role=tab] {
+  position: relative;
+  background-color: #d46f61;
+  color: #fff;
+  font-family: "Edmondsans", Geneva, Verdana, "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  font-size: 1.5rem;
+  font-weight: normal;
+  margin: 0;
+  padding: 0.25rem 1.375rem 0.0625rem;
+  border-bottom: 0.1875rem solid transparent;
+}
+[role=tab]:focus {
+  outline: none;
+}
+.keyboard [role=tab]:focus {
+  border-bottom-color: #d7cf80;
+}
+.js [role=tab] {
+  cursor: pointer;
+}
+[role=tab] .icon-tab {
+  position: absolute;
+  fill: #fff;
+  top: 50%;
+  right: 0.5rem;
+  height: 3rem;
+  width: 3rem;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  transition: -webkit-transform 0.3s;
+  transition: transform 0.3s;
+}
+[role=tab] .dash {
+  transition: opacity 0.15s;
+}
+[role=tab][aria-expanded=true] .icon-tab {
+  -webkit-transform: translateY(-50%) rotate(90deg);
+          transform: translateY(-50%) rotate(90deg);
+}
+[role=tab][aria-expanded=true] .dash {
+  opacity: 0;
+}
+[role=tabpanel] {
+  background-color: #fff;
+  overflow: hidden;
+  padding: 1.375rem;
+}
+[role=tabpanel][aria-hidden=true] {
+  display: none;
+}
+[role=tabpanel] p {
+  margin: 0;
+}
+.block {
+  margin: 0 10%;
+}
+.title-block {
+  font-family: "Edmondsans", Geneva, Verdana, "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  font-weight: normal;
+  font-size: 1.875rem;
+}
+.title-block span,
+.title-block .icon {
+  vertical-align: middle;
+}
+.intro-banner {
+  background-color: #d46f61;
+  border: 5px solid #d7cf80;
+  border-left: 0;
+  border-right: 0;
+  padding: 1.875rem 2.5rem;
+  width: 100%;
+  color: #fff;
+}
+.intro-banner p {
+  font-family: "Edmondsans", Geneva, Verdana, "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  font-size: 1.75rem;
+  margin: 4% 0;
+  text-align: center;
+}
+.intro-action {
+  text-align: center;
+}
+.intro-action .button-box {
+  margin: 4%;
+  text-decoration: none;
+}
+@media (min-width: 48em) {
+  .intro-banner p {
+    margin: 1.75rem 0;
+    line-height: 1.3125;
+  }
+  .intro-action .button-box {
+    margin-top: 1.75rem;
+    margin-bottom: 1.75rem;
+  }
+}
