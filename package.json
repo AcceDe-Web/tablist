@@ -3,7 +3,7 @@
   "name": "accedeweb-tablist",
   "version": "0.0.0",
   "description": "WAI-ARIA tablist plugin based on AcceDe Web instructions",
-  "main": "tablist.js",
+  "main": "lib/tablist.js",
   "scripts": {
     "test": "mocha-phantomjs ./test/accordeon.html"
   },
