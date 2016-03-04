@@ -112,13 +112,15 @@
     <script src="./js/bind.js"></script>
     <script src="../lib/tablist.js"></script>
     <script>
-      window.Tablist.init();
+      window.tablist = new window.Tablist( '[role=tablist]' );
 
-      delegate( document.body, 'click', '[role=tab]', Tablist.tabAction );
-      delegate( document.body, 'focus', '[role=tab]', Tablist.tabFocus );
-      delegate( document.body, 'keydown', '[role=tab]', Tablist.tabKey );
-      delegate( document.body, 'focus', '[role=tabpanel]', Tablist.panelFocus );
-      delegate( document.body, 'keydown', '[role=tabpanel]', Tablist.panelKey );
+      window.delegate( document.body, 'click', '[role=tab]', window.tablist.tabAction );
+      window.delegate( document.body, 'focus', '[role=tab]', window.tablist.tabFocus );
+      window.delegate( document.body, 'keydown', '[role=tab]', window.tablist.tabKey );
+      window.delegate( document.body, 'focus', '[role=tabpanel]', window.tablist.panelFocus );
+      window.delegate( document.body, 'keydown', '[role=tabpanel]', window.tablist.panelKey );
+
+      window.tablist.closeAll( document.querySelector( '[role=tablist]' ), true );
     </script>
     <script src="../node_modules/mocha/mocha.js"></script>
     <script src="../node_modules/chai/chai.js"></script>
