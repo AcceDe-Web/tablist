@@ -10,6 +10,7 @@
     "doc-lint": "documentation lint",
     "doc-serve": "documentation serve"
   },
+  "pre-push": [ "test" ],
   "repository": {
     "type": "git",
     "url": "git@github.com:Switch-Company/accedeweb-tablist.git"
@@ -31,6 +32,7 @@
     "documentation": "^4.0.0-beta2",
     "faucet": "0.0.1",
     "nightmare": "^2.3.0",
+    "pre-push": "^0.1.1",
     "tape": "^4.5.1"
   }
 }
