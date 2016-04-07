@@ -120,19 +120,8 @@
       window.delegate( document.body, 'focus', '[role=tabpanel]', window.tablist.panelFocus );
       window.delegate( document.body, 'keydown', '[role=tabpanel]', window.tablist.panelKey );
 
+
       window.tablist.closeAll( document.querySelector( '[role=tablist]' ), true );
-    </script>
-    <script src="../node_modules/mocha/mocha.js"></script>
-    <script src="../node_modules/chai/chai.js"></script>
-    <script>
-      mocha.ui('bdd');
-      expect = chai.expect;
-    </script>
-    <script src="./accordion.js"></script>
-    <script>
-      if( window.callPhantom ){
-        mocha.run();
-      }
     </script>
   </body>
 </html>

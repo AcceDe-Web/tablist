@@ -1,242 +1,473 @@
-/* globals describe: true, afterEach: true, expect: true, it: true */
-describe( 'Comportements d\'Accordéon', function(){
-
-  var tablist = document.querySelector( '[role=tablist]' ),
-      //multiselectable = tablist.getAttribute( 'aria-multiselectable' ) === 'true',
-      tabs = document.querySelectorAll( '[role=tab]' ),
-      tabpanels = document.querySelectorAll( '[role=tabpanel]' ),
-      noop = function(){};
-
-  afterEach(function() {
-    window.tablist.closeAll( tablist, true );
-  } );
+/* jshint esnext:true, node:true  */
+/* globals require */
+
+'use strict';
+
+const test        = require( 'tape' );
+const loadBrowser = require( './tools/browser' );
+
+
+// test 1
+test( '1| L’entête de panneau ayant le focus est le seul à avoir la valeur « true » pour l’attribut « aria-selected ».', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '[role="tab"]' )
+    .evaluate(() => {
+      return {
+        ariaSelected: document.activeElement.getAttribute( 'aria-selected' ),
+        selectedItems: document.querySelectorAll( '[aria-selected="true"]' ).length
+      };
+    })
+    .end() // close browser
+    .then(( actual ) => {
+      assert.equal( actual.ariaSelected, 'true', 'Les deux doivent avoir la valeur « true ».' );
+      assert.equal( actual.selectedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
+      assert.end();
+    });
+});
+
+
+// test 2
+test( '2| L’entête de panneau ayant le focus est le seul à avoir la valeur « 0 » pour l’attribut « tabindex ».', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '[role="tab"]' )
+    .evaluate(() => {
+      return {
+        tabindex: document.activeElement.getAttribute( 'tabindex' ),
+        tabindexedItems: document.querySelectorAll( '[role="tab"][tabindex="0"]' ).length
+      };
+    })
+    .end() // close browser
+    .then(( actual ) => {
+      assert.equal( actual.tabindex, '0', 'Les deux doivent avoir la valeur « 0 ».' );
+      assert.equal( actual.tabindexedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
+      assert.end();
+    });
+});
+
+
+// test 3
+test( '3| Les entêtes de panneau n’ayant pas le focus ont la valeur « false » pour l’attribut « aria-selected ».', ( assert ) => {
+  loadBrowser() // open browser
+    .evaluate(() => {
+      return {
+        actual: document.querySelectorAll( '[aria-selected="false"]' ).length,
+        expected: document.querySelectorAll( '[role="tab"]' ).length
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.actual, results.expected, 'Aucune entête n’a le focus au chargement. On doit donc retrouver toutes les entêtes non sélectionnées.' );
+      assert.end();
+    });
+});
+
+
+// test 4
+test( '4| Les entêtes de panneau n’ayant pas le focus ont la valeur « -1 » pour l’attribut « tabindex ».', ( assert ) => {
+  loadBrowser() // open browser
+    .evaluate(() => {
+      return {
+        actual: document.querySelectorAll( '[role="tab"][aria-selected="false"][tabindex="-1"]' ).length,
+        expected: document.querySelectorAll( '[role="tab"]' ).length
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.actual, results.expected, 'Aucun entête n’a le focus au chargement. Tous les entêtes doivent avoir leur tabindex à « 0 ».' );
+      assert.end();
+    });
+});
+
+
+// test 5
+test( '5| Un « Click » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' )
+    .evaluate(() => {
+      var tab = document.getElementById( 'tab2' );
+
+      return {
+        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
+        ariaHidden: document.querySelector( '[role="tabpanel"][aria-labelledby="'+ tab.id +'"]' ).getAttribute( 'aria-hidden' )
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.ariaExpanded, 'true', 'L’élément doit être actif.' );
+      assert.equal( results.ariaHidden, 'false', 'L’élément doit être affiché.' );
+      assert.end();
+    });
+});
+
 
-  function fakeEvent( el, evtName, keyCode, ctrlKey ){
-    var fake = {
-      preventDefault: noop,
-      stopPropagation: noop,
-      type: evtName,
-      currentTarget: el
-    },
-    isTab = 'tab' === el.getAttribute( 'role' ),
-    action;
-
-    if( keyCode ){
-      fake.keyCode = keyCode;
-    }
-
-    if( ctrlKey ){
-      fake.ctrlKey = true;
-    }
-
-    if( 'click' === evtName ){
-      action = 'tabAction';
-    }
-    else if( 'focus' === evtName ){
-      if( isTab ){
-        action = 'tabFocus';
-      }
-      else{
-        action = 'panelFocus';
-      }
-    }
-    else{
-      if( isTab ){
-        action = 'tabKey';
-      }
-      else{
-        action = 'panelKey';
-      }
-    }
-
-    window.tablist[ action ]( fake );
-  }
-
-  it( 'L’entête de panneau ayant le focus est le seul à avoir la valeur « true » pour l’attribut « aria-selected ».', function(){
-    tabs[ 0 ].focus();
-
-    expect( tabs[ 0 ].getAttribute( 'aria-selected' ) ).to.be.equal( 'true' );
-    expect( document.querySelectorAll( '[aria-selected=true]' ).length ).to.be.equal( 1 );
-  } );
-
-  it( 'L’entête de panneau ayant le focus est le seul à avoir la valeur « 0 » pour l’attribut « tabindex ».', function(){
-    tabs[ 0 ].focus();
-
-    expect( tabs[ 0 ].getAttribute( 'tabindex' ) ).to.be.equal( '0' );
-    expect( document.querySelectorAll( '[role=tab][tabindex="0"]' ).length ).to.be.equal( 1 );
-  } );
-
-  it( 'Les entêtes de panneau n’ayant pas le focus ont la valeur « false » pour l’attribut « aria-selected ».', function(){
-    expect( document.querySelectorAll( '[aria-selected=false]' ).length ).to.be.equal( tabs.length - 1 );
-  } );
-
-  it( 'Les entêtes de panneau n’ayant pas le focus ont la valeur « -1 » pour l’attribut « tabindex ».', function(){
-    expect( document.querySelectorAll( '[role=tab][tabindex="-1"]' ).length ).to.be.equal( tabs.length - 1 );
-  } );
-
-  it( 'Un « Click », une pression sur la touche « Entrée » ou sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', function(){
-    fakeEvent( tabs[ 0 ], 'click' );
-
-    expect( tabs[ 0 ].getAttribute( 'aria-expanded' ) ).to.be.equal( 'true' );
-    expect( tabpanels[ 0 ].getAttribute( 'aria-hidden' ) ).to.be.equal( 'false' );
-  } );
-
-  it( 'Un « Click », une pression sur la touche « Entrée » ou sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', function(){
-    fakeEvent( tabs[ 0 ], 'click' );
-
-    fakeEvent( tabs[ 0 ], 'click' );
-
-    expect( tabs[ 0 ].getAttribute( 'aria-expanded' ) ).to.be.equal( 'false' );
-    expect( tabpanels[ 0 ].getAttribute( 'aria-hidden' ) ).to.be.equal( 'true' );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche haut » lorsque le focus est positionné sur le premier entête de panneau déplace le focus sur le dernier entête de panneau.', function(){
-    tabs[ 0 ].focus();
-
-    fakeEvent( tabs[ 0 ], 'keydown', 38 );
-
-    expect( tabs[ tabs.length-1 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche haut » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau précédent.', function(){
-    tabs[ 1 ].focus();
-
-    fakeEvent( tabs[ 0 ], 'keydown', 38 );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche gauche » lorsque le focus est positionné sur le premier entête de panneau déplace le focus sur le dernier entête de panneau.', function(){
-    tabs[ 0 ].focus();
-
-    fakeEvent( tabs[ 0 ], 'keydown', 37 );
-
-    expect( tabs[ tabs.length-1 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche gauche » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau précédent.', function(){
-    tabs[ 1 ].focus();
-
-    fakeEvent( tabs[ 0 ], 'keydown', 37 );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche bas » lorsque le focus est positionné sur le premier entête de panneau déplace le focus sur le dernier entête de panneau.', function(){
-    tabs[ tabs.length-1 ].focus();
-
-    fakeEvent( tabs[ tabs.length-1 ], 'keydown', 40 );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche bas » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau précédent.', function(){
-    tabs[ 1 ].focus();
-
-    fakeEvent( tabs[ 2 ], 'keydown', 40 );
-
-    expect( tabs[ 2 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche droite » lorsque le focus est positionné sur le premier entête de panneau déplace le focus sur le dernier entête de panneau.', function(){
-    tabs[ tabs.length-1 ].focus();
-
-    fakeEvent( tabs[ tabs.length-1 ], 'keydown', 39 );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la touche « Flèche droite » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau précédent.', function(){
-    tabs[ 1 ].focus();
-
-    fakeEvent( tabs[ 2 ], 'keydown', 39 );
-
-    expect( tabs[ 2 ] ).to.be.equal( document.activeElement );
-
-  } );
-
-  it( 'Une pression sur la combinaison de touches « Ctrl+Flèche haut » lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’entête de ce panneau.', function(){
-    // open panek first
-    fakeEvent( tabs[ 0 ], 'click' );
-
-    var linkInPanel = tabpanels[ 0 ].querySelector( 'a' );
-    linkInPanel.focus();
-
-    fakeEvent( tabpanels[ 0 ], 'keydown' , 38, true );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-  } );
-
-  it( 'Une pression sur la combinaison de touches « Ctrl+Page précédente » lorsque le focus est positionné sur un élément du premier panneau déplace le focus sur le dernier entête de panneau.', function(){
-
-    var linkInPanel = tabpanels[ 0 ].querySelector( 'a' );
-    linkInPanel.focus();
-
-    fakeEvent( tabpanels[ 0 ], 'keydown' , 33, true );
-
-    expect( tabs[ tabs.length-1 ] ).to.be.equal( document.activeElement );
-  } );
-
-  it( 'Une pression sur la combinaison de touches « Ctrl+Page précédente » lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’entête de panneau précédent.', function(){
-    // open panek first
-    fakeEvent( tabs[ 1 ], 'click' );
-
-    var linkInPanel = tabpanels[ 1 ].querySelector( 'a' );
-    linkInPanel.focus();
-
-    fakeEvent( tabpanels[ 1 ], 'keydown' , 33, true );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-  } );
-
-  it( 'Une pression sur la combinaison de touches « Ctrl+Page suivante» lorsque le focus est positionné sur un élément du dernier panneau déplace le focus sur le premier entête de panneau.', function(){
-    // open panek first
-    fakeEvent( tabs[ tabs.length-1 ], 'click' );
-
-    var linkInPanel = tabpanels[ tabpanels.length-1 ].querySelector( 'a' );
-    linkInPanel.focus();
-
-    fakeEvent( tabpanels[ tabpanels.length-1 ], 'keydown' , 34, true );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-  } );
-
-  it( 'Une pression sur la combinaison de touches « Ctrl+Page suivante» lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’entête de panneau suivant.', function(){
-    // open panek first
-    fakeEvent( tabs[ 1 ], 'click' );
-
-    var linkInPanel = tabpanels[ 1 ].querySelector( 'a' );
-    linkInPanel.focus();
-
-    fakeEvent( tabpanels[ 1 ], 'keydown' , 34, true );
-
-    expect( tabs[ 2 ] ).to.be.equal( document.activeElement );
-  } );
-
-  it( 'Une pression sur la touche « Origine », lorsque le focus est positionné sur un entête de panneau, déplace le focus sur le premier entête de panneau.', function(){
-
-    tabs[ 2 ].focus();
-
-    fakeEvent( tabs[ 2 ], 'keydown' , 36 );
-
-    expect( tabs[ 0 ] ).to.be.equal( document.activeElement );
-  } );
-
-  it( 'Une pression sur la touche « Fin », lorsque le focus est positionné sur un entête de panneau, déplace le focus sur le dernier entête de panneau.', function(){
-
-    tabs[ 2 ].focus();
-
-    fakeEvent( tabs[ 2 ], 'keydown' , 35 );
-
-    expect( tabs[ tabs.length-1  ] ).to.be.equal( document.activeElement );
-  } );
-
-} );
+// test 6
+test( '6| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab2' )
+    .key( 13 ) // `Enter` key
+    .evaluate(() => {
+      var tab = document.getElementById( 'tab2' );
+
+      return {
+        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
+        ariaHidden: document.querySelector( '[role="tabpanel"][aria-labelledby="'+ tab.id +'"]' ).getAttribute( 'aria-hidden' )
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.ariaExpanded, 'true', 'L’élément doit être actif.' );
+      assert.equal( results.ariaHidden, 'false', 'L’élément doit être affiché.' );
+      assert.end();
+    });
+});
+
+
+// test 7
+test( '7| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab2' )
+    .key( 32 ) // `Space` key
+    .evaluate(() => {
+      var tab = document.getElementById( 'tab2' );
+
+      return {
+        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
+        ariaHidden: document.querySelector( '[role="tabpanel"][aria-labelledby="'+ tab.id +'"]' ).getAttribute( 'aria-hidden' )
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.ariaExpanded, 'true', 'L’élément doit être actif.' );
+      assert.equal( results.ariaHidden, 'false', 'L’élément doit être affiché.' );
+      assert.end();
+    });
+});
+
+
+// test 8
+test( '8| Un « Click » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' )
+    .click( '#tab2[aria-expanded="true"]' )
+    .evaluate(() => {
+      var tab = document.getElementById( 'tab2' );
+
+      return {
+        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
+        ariaHidden: document.querySelector( '[role="tabpanel"][aria-labelledby="'+ tab.id +'"]' ).getAttribute( 'aria-hidden' )
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.ariaExpanded, 'false', 'L’élément doit être inactif.' );
+      assert.equal( results.ariaHidden, 'true', 'L’élément doit être masqué.' );
+      assert.end();
+    });
+});
+
+
+// test 9
+test( '9| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' )
+    .focus( '#tab2[aria-expanded="true"]' )
+    .key( 13 ) // `Enter` key
+    .evaluate(() => {
+      var tab = document.getElementById( 'tab2' );
+
+      return {
+        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
+        ariaHidden: document.querySelector( '[role="tabpanel"][aria-labelledby="'+ tab.id +'"]' ).getAttribute( 'aria-hidden' )
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.ariaExpanded, 'false', 'L’élément doit être inactif.' );
+      assert.equal( results.ariaHidden, 'true', 'L’élément doit être masqué.' );
+      assert.end();
+    });
+});
+
+
+// test 10
+test( '10| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' )
+    .focus( '#tab2[aria-expanded="true"]' )
+    .key( 32 ) // `Space` key
+    .evaluate(() => {
+      var tab = document.getElementById( 'tab2' );
+
+      return {
+        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
+        ariaHidden: document.querySelector( '[role="tabpanel"][aria-labelledby="'+ tab.id +'"]' ).getAttribute( 'aria-hidden' )
+      };
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results.ariaExpanded, 'false', 'L’élément doit être inactif.' );
+      assert.equal( results.ariaHidden, 'true', 'L’élément doit être masqué.' );
+      assert.end();
+    });
+});
+
+
+// test 11
+test( '11| Une pression sur la touche « Flèche haut » lorsque le focus est positionné sur le premier entête de panneau déplace le focus sur le dernier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab1' )
+    .key( 38 ) // `ArrowUp` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]:last-of-type' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le dernier élément.' );
+      assert.end();
+    });
+});
+
+
+// test 12
+test( '12| Une pression sur la touche « Flèche haut » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau précédent.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab2' )
+    .key( 38 ) // `ArrowUp` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier élément.' );
+      assert.end();
+    });
+});
+
+
+// test 13
+test( '13| Une pression sur la touche « Flèche gauche » lorsque le focus est positionné sur le premier entête de panneau déplace le focus sur le dernier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab1' )
+    .key( 37 ) // `ArrowLeft` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]:last-of-type' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le dernier élément.' );
+      assert.end();
+    });
+});
+
+
+// test 14
+test( '14| Une pression sur la touche « Flèche gauche » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau précédent.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab2' )
+    .key( 37 ) // `ArrowLeft` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier élément.' );
+      assert.end();
+    });
+});
+
+
+// test 15
+test( '15| Une pression sur la touche « Flèche bas » lorsque le focus est positionné sur le dernier entête de panneau déplace le focus sur le premier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '[role="tab"]:last-of-type' )
+    .key( 40 ) // `ArrowDown` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier élément.' );
+      assert.end();
+    });
+});
+
+
+// test 16
+test( '16| Une pression sur la touche « Flèche bas » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau suivant.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '[role="tab"]' )
+    .key( 40 ) // `ArrowDown` key
+    .evaluate(() => {
+      return document.querySelector( '#tab2' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le second élément.' );
+      assert.end();
+    });
+});
+
+
+
+// test 17
+test( '17| Une pression sur la touche « Flèche droite » lorsque le focus est positionné sur le dernier entête de panneau déplace le focus sur le premier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '[role="tab"]:last-of-type' )
+    .key( 39 ) // `ArrowRight` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier élément.' );
+      assert.end();
+    });
+});
+
+
+// test 18
+test( '18| Une pression sur la touche « Flèche droite » lorsque le focus est positionné sur un entête de panneau déplace le focus sur l’entête de panneau suivant.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '[role="tab"]' )
+    .key( 39 ) // `ArrowRight` key
+    .evaluate(() => {
+      return document.querySelector( '#tab2' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le second élément.' );
+      assert.end();
+    });
+});
+
+
+// test 19
+test( '19| Une pression sur la combinaison de touches « Ctrl+Flèche haut » lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’entête de ce panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '[role="tab"]' ) // open tab first
+    .focus( '[role="tabpanel"] a' )
+    .key({
+      code: 38, // `ArrowUp` key
+      ctrl: true
+    })
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      assert.end();
+    });
+});
+
+
+// test 20
+test( '20| Une pression sur la combinaison de touches « Ctrl+Page précédente » lorsque le focus est positionné sur un élément du premier panneau déplace le focus sur le dernier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '[role="tab"]' ) // open tab first
+    .focus( '[role="tabpanel"] a' )
+    .key({
+      code: 33, // `PageUp` key
+      ctrl: true
+    })
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]:last-of-type' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le dernier entête de panneau.' );
+      assert.end();
+    });
+});
+
+
+// test 21
+test( '21| Une pression sur la combinaison de touches « Ctrl+Page précédente » lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’entête de panneau précédent.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' ) // open tab first
+    .focus( '[aria-labelledby="tab2"] a' )
+    .key({
+      code: 33, // `PageUp` key
+      ctrl: true
+    })
+    .evaluate(() => {
+      return document.querySelector( '#tab1' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      assert.end();
+    });
+});
+
+
+// test 22
+test( '22| Une pression sur la combinaison de touches « Ctrl+Page suivante» lorsque le focus est positionné sur un élément du dernier panneau déplace le focus sur le premier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '[role="tab"]:last-of-type' ) // open tab first
+    .focus( '[role="tabpanel"]:last-of-type a' )
+    .key({
+      code: 34, // `PageDown` key
+      ctrl: true
+    })
+    .evaluate(() => {
+      return document.querySelector( '#tab1' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      assert.end();
+    });
+});
+
+
+// test 23
+test( '23| Une pression sur la combinaison de touches « Ctrl+Page suivante» lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’entête de panneau suivant.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '[role="tab"]' ) // open tab first
+    .focus( '[role="tabpanel"] a' )
+    .key({
+      code: 34, // `PageDown` key
+      ctrl: true
+    })
+    .evaluate(() => {
+      return document.querySelector( '#tab2' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le second entête de panneau.' );
+      assert.end();
+    });
+});
+
+
+// test 24
+test( '24| Une pression sur la touche « Origine », lorsque le focus est positionné sur un entête de panneau, déplace le focus sur le premier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab3' )
+    .key( 36 ) // `home` key
+    .evaluate(() => {
+      return document.querySelector( '#tab1' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      assert.end();
+    });
+});
+
+
+// test 25
+test( '25| Une pression sur la touche « Fin », lorsque le focus est positionné sur un entête de panneau, déplace le focus sur le dernier entête de panneau.', ( assert ) => {
+  loadBrowser() // open browser
+    .focus( '#tab2' )
+    .key( 35 ) // `end` key
+    .evaluate(() => {
+      return document.querySelector( '[role="tab"]:last-of-type' ) === document.activeElement;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'L’élément actif doit être le dernier entête de panneau.' );
+      assert.end();
+    });
+});

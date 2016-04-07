@@ -5,7 +5,7 @@
   "description": "WAI-ARIA tablist plugin based on AcceDe Web instructions",
   "main": "lib/tablist.js",
   "scripts": {
-    "test": "mocha-phantomjs ./test/accordeon.html",
+    "test": "tape test/accordion.js | faucet",
     "doc": "documentation build lib/*.js",
     "doc-lint": "documentation lint",
     "doc-serve": "documentation serve"
@@ -28,9 +28,9 @@
   },
   "license": "ISC",
   "devDependencies": {
-    "chai": "^3.3.0",
     "documentation": "^4.0.0-beta2",
-    "mocha": "^2.3.3",
-    "mocha-phantomjs": "^4.0.1"
+    "faucet": "0.0.1",
+    "nightmare": "^2.3.0",
+    "tape": "^4.5.1"
   }
 }
