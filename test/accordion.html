@@ -112,9 +112,9 @@
     <script src="./js/bind.js"></script>
     <script src="../lib/tablist.js"></script>
     <script>
-      window.tablist = new window.Tablist( '[role=tablist]' );
-
-      window.tablist.closeAll( document.querySelector( '[role=tablist]' ), true );
+      var list = document.querySelector( '[role=tablist]' );
+      var tablist = new window.Tablist( list );
+      tablist.closeAll( document.querySelector( '[role=tablist]' ), true );
     </script>
   </body>
 </html>
