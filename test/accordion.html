@@ -114,13 +114,6 @@
     <script>
       window.tablist = new window.Tablist( '[role=tablist]' );
 
-      window.delegate( document.body, 'click', '[role=tab]', window.tablist.tabAction );
-      window.delegate( document.body, 'focus', '[role=tab]', window.tablist.tabFocus );
-      window.delegate( document.body, 'keydown', '[role=tab]', window.tablist.tabKey );
-      window.delegate( document.body, 'focus', '[role=tabpanel]', window.tablist.panelFocus );
-      window.delegate( document.body, 'keydown', '[role=tabpanel]', window.tablist.panelKey );
-
-
       window.tablist.closeAll( document.querySelector( '[role=tablist]' ), true );
     </script>
   </body>
