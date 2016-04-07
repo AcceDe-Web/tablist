@@ -67,13 +67,14 @@ test( '4| Les entêtes de panneau n’ayant pas le focus ont la valeur « -1 �
   loadBrowser() // open browser
     .evaluate(() => {
       return {
-        actual: document.querySelectorAll( '[role="tab"][aria-selected="false"][tabindex="-1"]' ).length,
-        expected: document.querySelectorAll( '[role="tab"]' ).length
+        first: document.querySelector( '[role="tab"]' ).getAttribute( 'tabindex' ) === '0',
+        others: document.querySelectorAll( '[role="tab"][tabindex="-1"]' ).length
       };
     })
     .end() // close browser
     .then(( results ) => {
-      assert.equal( results.actual, results.expected, 'Aucun entête n’a le focus au chargement. Tous les entêtes doivent avoir leur tabindex à « 0 ».' );
+      assert.equal( results.first, true, 'Seul le premier entête est focusable (tabindex à 0).' );
+      assert.equal( results.others, 3, 'Tous les autres entêtes ne sont pas focusables (tabindex à -1)' );
       assert.end();
     });
 });
