@@ -472,3 +472,58 @@ test( '25| Une pression sur la touche « Fin », lorsque le focus est position
       assert.end();
     });
 });
+
+
+// test 26
+test( '26| A l’ouverture d’un panneau, la fonction de callback correspondante doit être appelée.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' ) // open panel
+    .evaluate(() => {
+      return document.querySelector( '#tab2' ).dataset.openCB;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, 'true', 'La fonction de callback doit être exécutée.' );
+      assert.end();
+    });
+});
+
+
+// test 27
+test( '27| A la fermeture d’un panneau, la fonction de callback correspondante doit être appelée.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab2' ) // open panel
+    .click( '#tab2' ) // close panel
+    .evaluate(() => {
+      return document.querySelector( '#tab2' ).dataset.closeCB;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, 'true', 'La fonction de callback doit être exécutée.' );
+      assert.end();
+    });
+});
+
+
+// test 28
+test( '28| A la fermeture de tous les panneaux, la fonction de callback correspondante doit être appelée.', ( assert ) => {
+  loadBrowser() // open browser
+    .click( '#tab1' ) // open panel
+    .click( '#tab2' ) // open panel
+    .click( '#tab3' ) // open panel
+    .evaluate(() => {
+
+      // close all tabs
+      window.tablist.closeAll();
+
+      return document.querySelector( '#tab1' ).dataset.closeAllCB === 'true' &&
+             document.querySelector( '#tab2' ).dataset.closeAllCB === 'true' &&
+             document.querySelector( '#tab3' ).dataset.closeAllCB === 'true' &&
+             !document.querySelector( '#tab4' ).dataset.closeAllCB;
+    })
+    .end() // close browser
+    .then(( results ) => {
+      assert.equal( results, true, 'La fonction de callback doit être exécutée.' );
+      assert.end();
+    });
+});

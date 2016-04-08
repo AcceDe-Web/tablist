@@ -112,9 +112,27 @@
     <script src="./js/bind.js"></script>
     <script src="../lib/tablist.js"></script>
     <script>
+      function closeAll( tabs ) {
+        tabs.forEach( function( tab ) {
+          tab.dataset.closeAllCB = true;
+        });
+      }
+
+      function close( tab ) {
+        tab.dataset.closeCB = true;
+      }
+
+      function open( tab ) {
+        tab.dataset.openCB = true;
+      }
+
       var list = document.querySelector( '[role=tablist]' );
-      var tablist = new window.Tablist( list );
-      tablist.closeAll( document.querySelector( '[role=tablist]' ), true );
+      var tablist = new window.Tablist( list, {
+        closeAll: closeAll,
+        closeTab: close,
+        openTab: open
+      });
+      tablist.closeAll( true );
     </script>
   </body>
 </html>
