@@ -1,12 +1,11 @@
 /* jshint esnext:true, node:true  */
-/* globals require, __dirname  */
+/* globals require  */
 
 'use strict';
 
 const Browser = require( './nightmare' );
-const path    = 'file://' + __dirname + '/../accordion.html';
 
-function loadBrowser() {
+function loadBrowser( path ) {
   const browser = new Browser({
     show: false
   });
