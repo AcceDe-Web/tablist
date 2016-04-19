@@ -26,7 +26,7 @@ test( '1| L’entête de panneau ayant le focus est le seul à avoir la valeur �
     })
     .end() // close browser
     .then(( actual ) => {
-      t.equal( actual.ariaSelected, 'true', 'Les deux doivent avoir la valeur « true ».' );
+      t.equal( actual.ariaSelected, 'true', '« aria-selected » doit valoir « true ».' );
       t.equal( actual.selectedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
       t.end();
     });

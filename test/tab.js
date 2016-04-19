@@ -28,8 +28,8 @@ test( '1| L’onglet ayant le focus est le seul à avoir la valeur « true » po
     })
     .end() // close browser
     .then(( actual ) => {
-      t.equal( actual.ariaSelected, 'true', 'Les deux doivent avoir la valeur « true ».' );
-      t.equal( actual.selectedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
+      t.equal( actual.ariaSelected, 'true', '« aria-selected » doit valoir « true ».' );
+      t.equal( actual.selectedItems, 1, '« 1 » seul élément doit avoir un « aria-selected » à « true ».' );
       t.end();
     });
 });
@@ -47,8 +47,8 @@ test( '2| L’onglet ayant le focus est le seul à avoir la valeur « 0 » pour 
     })
     .end() // close browser
     .then(( actual ) => {
-      t.equal( actual.tabindex, '0', 'Les deux doivent avoir la valeur « 0 ».' );
-      t.equal( actual.tabindexedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
+      t.equal( actual.tabindex, '0', '« tabindex » doit valoir « 0 ».' );
+      t.equal( actual.tabindexedItems, 1, '« 1 » seul élément doit avoir un « tabindex » à « 0 ».' );
       t.end();
     });
 });
@@ -92,7 +92,7 @@ test( '4| Les onglets n’ayant pas le focus ont la valeur « false » pour l’
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results.actual, results.expected, 'Aucune entête n’a le focus au chargement. On doit donc retrouver toutes les entêtes non sélectionnées.' );
+      t.equal( results.actual, results.expected, 'Aucune onglet n’a le focus au chargement. On doit donc retrouver tous les entêtes non sélectionnés.' );
       t.end();
     });
 });
@@ -109,8 +109,8 @@ test( '5| Les onglets n’ayant pas le focus ont la valeur « -1 » pour l’att
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results.first, true, 'Seul le premier onglet est focusable (tabindex à 0).' );
-      t.equal( results.others, 3, 'Tous les autres onglets ne sont pas focusables (tabindex à -1)' );
+      t.equal( results.first, true, 'Seul le premier onglet est focusable (« tabindex » à « 0 »).' );
+      t.equal( results.others, 3, 'Tous les autres onglets ne sont pas focusables (« tabindex » à « -1 »)' );
       t.end();
     });
 });
@@ -308,7 +308,7 @@ test( '16| Une pression sur la combinaison de touches « Ctrl+Flèche haut » lo
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      t.equal( results, true, 'L’élément actif doit être le premier onglet.' );
       t.end();
     });
 });
@@ -328,7 +328,7 @@ test( '17| Une pression sur la combinaison de touches « Ctrl+Page précédente 
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le dernier entête de panneau.' );
+      t.equal( results, true, 'L’élément actif doit être le dernier onglet.' );
       t.end();
     });
 });
@@ -348,7 +348,7 @@ test( '18| Une pression sur la combinaison de touches « Ctrl+Page précédente 
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      t.equal( results, true, 'L’élément actif doit être le premier onglet.' );
       t.end();
     });
 });
@@ -368,7 +368,7 @@ test( '19| Une pression sur la combinaison de touches « Ctrl+Page suivante» lo
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier entête de panneau.' );
+      t.equal( results, true, 'L’élément actif doit être le premier onglet.' );
       t.end();
     });
 });
@@ -388,7 +388,7 @@ test( '20| Une pression sur la combinaison de touches « Ctrl+Page suivante» lo
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le second entête de panneau.' );
+      t.equal( results, true, 'L’élément actif doit être le second onglet.' );
       t.end();
     });
 });
