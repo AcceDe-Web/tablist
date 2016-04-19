@@ -27,7 +27,7 @@ test( '1| L’entête de panneau ayant le focus est le seul à avoir la valeur �
     .end() // close browser
     .then(( actual ) => {
       t.equal( actual.ariaSelected, 'true', '« aria-selected » doit valoir « true ».' );
-      t.equal( actual.selectedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
+      t.equal( actual.selectedItems, 1, '« 1 » seul élément doit avoir un « aria-selected » à « true ».' );
       t.end();
     });
 });
@@ -45,8 +45,8 @@ test( '2| L’entête de panneau ayant le focus est le seul à avoir la valeur �
     })
     .end() // close browser
     .then(( actual ) => {
-      t.equal( actual.tabindex, '0', 'Les deux doivent avoir la valeur « 0 ».' );
-      t.equal( actual.tabindexedItems, 1, 'Les deux doivent avoir la valeur « 1 ».' );
+      t.equal( actual.tabindex, '0', '« tabindex » doit valoir « 0 ».' );
+      t.equal( actual.tabindexedItems, 1, '« 1 » seul élément doit avoir un « tabindex » à « 0 ».' );
       t.end();
     });
 });
@@ -80,8 +80,8 @@ test( '4| Les entêtes de panneau n’ayant pas le focus ont la valeur « -1 �
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results.first, true, 'Seul le premier entête est focusable (tabindex à 0).' );
-      t.equal( results.others, 3, 'Tous les autres entêtes ne sont pas focusables (tabindex à -1)' );
+      t.equal( results.first, true, 'Seul le premier entête est focusable (« tabindex » à « 0 »).' );
+      t.equal( results.others, 3, 'Tous les autres entêtes ne sont pas focusables (« tabindex » à « -1 »)' );
       t.end();
     });
 });
