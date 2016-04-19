@@ -5,7 +5,7 @@
   "description": "WAI-ARIA tablist plugin based on AcceDe Web instructions",
   "main": "lib/tablist.js",
   "scripts": {
-    "test": "tape test/accordion.js | faucet",
+    "test": "tape test/*.js | faucet",
     "doc": "documentation build lib/*.js",
     "doc-lint": "documentation lint",
     "doc-serve": "documentation serve"
