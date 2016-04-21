@@ -1,7 +1,12 @@
 /* jshint esnext:true, node:true  */
 const Nightmare   = require( 'nightmare' );
 
-// add focus action
+/**
+ * Add focus action
+ *
+ * Usage:
+ * .focus( selector ) => .focus( '.myClass' )
+ */
 Nightmare.action( 'focus', function ( selector, done ) {
   this.evaluate_now(( selector ) => {
     document.activeElement.blur();
@@ -15,7 +20,7 @@ Nightmare.action( 'focus', function ( selector, done ) {
  * Add keyboard events actions
  *
  * Usage:
- * .key( number ) => .key( 13 ) for the `Enter` key
+ * .key( keyCode ) => .key( 13 ) for the `Enter` key
  * .key( optionsObject )
  * optionsObject = {
  *   alt: [true|false],
