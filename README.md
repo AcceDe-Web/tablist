@@ -6,7 +6,7 @@ WAI-ARIA accordion and tab plugin without dependencies.
 
 ### HTML
 
-Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`. `aria-multiselectable` attribute on the tab list and `aria-labelledby` attribute on each tab panels when wanting an accordion instead of tabs. `id` attribute either on the tabs or the tab panel wether we want an accordion or tabs.
+Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`. `aria-multiselectable` attribute on the tab list and `aria-labelledby` attribute on each tab panels when wanting an accordion instead of tabs. `id` attribute either on the tabs or the tab panel whether we want an accordion or tabs.
 
 #### Example of accordion HTML structure
 
@@ -55,7 +55,7 @@ Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`. `aria-multisel
 </div>
 ```
 
-An `aria-disabled` attribute setted to `true` on a `tab` will disable the `tab` and the associated `tabpanel` making them unfocusable and unselectable.
+An `aria-disabled` attribute set to `true` on a `tab` will disable the `tab` and the associated `tabpanel` making them unfocusable and unselectable.
 
 If you wish to open one or more specific tab when the script starts, just add the `data-tab-open` attribute on the desired `tab`:
 
@@ -72,7 +72,7 @@ If you wish to open one or more specific tab when the script starts, just add th
 
 ### CSS
 
-At least a css selector for panels to be hidden when not selected:
+At least a <abbr title="Cascading Style Sheets">CSS</abbr> selector for panels to be hidden when not selected:
 
 ```css
 [role=tabpanel][aria-hidden=true] {
@@ -100,7 +100,7 @@ var Tablist = require( 'accedeweb-tablist' );
 import Tablist from accedeweb-tablist;
 ```
 
-or downloaded from Github and added to the page (minified and non minified version available in the `lib` folder )
+or downloaded from Github and added to the page (minified and non minified versions available in the `lib` folder )
 
 ```html
 <script src="./js/accedeweb-tablist.min.js"></script>
@@ -126,19 +126,19 @@ var tablist = new window.Tablist( list, {
 
 The script takes two parameters:
 
-* the `tablist` DOM element
-* an optionnal object with two callbacks:
-  * `openTab` callback will be executed when a new tab is open, passing the current tab DOM element as a parameter
-  * `closeTab` callback will be executed when a tab is closed, passing the closed tab DOM element as a parameter
+* the `tablist` <abbr title="Document Object Model">DOM</abbr> element
+* an optional object with two callbacks:
+  * `openTab` callback will be executed when a new tab is open, passing the current tab <abbr title="Document Object Model">DOM</abbr> element as a parameter
+  * `closeTab` callback will be executed when a tab is closed, passing the closed tab <abbr title="Document Object Model">DOM</abbr> element as a parameter
 
 As the script takes only one `tablist` element as parameter you have to loop over each `tablist` to kick off the script on each of them.
 
 ```js
 var lists = document.querySelectorAll( '[role="tablist"]' );
 
-Array.prototype.forEach.call( lists, function( list ){
+Array.prototype.forEach.call( lists, function( list ) {
   new window.Tablist( list );
-} );
+});
 ```
 
 ## Methods
@@ -162,7 +162,7 @@ function openCallback( openTab ){
 }
 ```
 
-This allow you to add or remove your own `class` for CSS purpose or animate the opening or closing of the tab panel.
+This allows you to add or remove your own `class` for <abbr title="Cascading Style Sheets">CSS</abbr> purposes or animate the opening or closing of the tab panel.
 
 ## Keyboard Interaction
 
@@ -171,9 +171,9 @@ The keyboard interactions are based on [Atalan's AcceDe Web guidelines (in Frenc
 * `Tab` - only the active tab is in the tab order. The user reaches the tabbed panel component by pressing the tab key until the active tab title receives focus.
 * `Left Arrow` - with focus on a tab, pressing the left arrow will move focus to the previous tab in the tab list and activate that tab. Pressing the left arrow when the focus is on the first tab in the tab list will move focus and activate the last tab in the list.
 * `Right Arrow` - with focus on a tab, pressing the right arrow will move focus to the next tab in the tab list and activate that tab. Pressing the right arrow when the focus is on the last tab in the tab list will move focus to and activate the first tab in the list.
-* `Up arrow` - behaves the same as left arrow in order to support vertical tabs
-* `Down arrow` - behaves the same as right arrow in order to support vertical tabs
-* `Control+Up Arrow` - with focus anywhere within the tab panel, pressing Control+Up Arrow will move focus to the tab for that panel. This is not standard behavior
+* `Up arrow` - behaves the same as left arrow in order to support vertical tabs.
+* `Down arrow` - behaves the same as right arrow in order to support vertical tabs.
+* `Control+Up Arrow` - with focus anywhere within the tab panel, pressing Control+Up Arrow will move focus to the tab for that panel. This is not standard behavior.
 * `Control+PageUp` - When focus is inside of a tab panel, pressing Control+PageUp moves focus to the tab of the previous tab in the tab list and activates that tab. When focus is in the first tab panel in the tab list, pressing Control+PageUp will move focus to the last tab in the tab list and activate that tab.
 * `Control+PageDown` When focus is inside of a tab panel, pressing Control+PageDown moves focus to the tab of the next tab in the tab list and activates that tab. When focus is in the last tab panel in the tab list, pressing Control+PageUpwill move focus to the first tab in the tab list and activate that tab.
 
