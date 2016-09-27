@@ -100,7 +100,7 @@ var Tablist = require( 'accedeweb-tablist' );
 import Tablist from accedeweb-tablist;
 ```
 
-or downloaded from Github and added to the page (minified and non minified versions available in the `lib` folder )
+or downloaded from Github and added to the page (minified and non minified versions available in the `dist` folder)
 
 ```html
 <script src="./js/accedeweb-tablist.min.js"></script>
