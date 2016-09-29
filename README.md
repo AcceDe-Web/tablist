@@ -178,6 +178,17 @@ The keyboard interactions are based on [Atalan's AcceDe Web guidelines (in Frenc
 * `Control+PageDown` When focus is inside of a tab panel, pressing Control+PageDown moves focus to the tab of the next tab in the tab list and activates that tab. When focus is in the last tab panel in the tab list, pressing Control+PageUpwill move focus to the first tab in the tab list and activate that tab.
 
 
+## Compatibilty
+
+This plugin is tested against the following browsers:
+
+* Internet Explorer 9 and higher
+* Microsoft Edge
+* Chrome
+* Firefox
+* Safari
+
+
 ## Testing
 
 Install the project dependencies:
