@@ -5,11 +5,11 @@
 
 const test        = require( 'tape' );
 const loadBrowser = require( './tools/browser' );
-const path        = 'file://' + __dirname + '/accordion.html';
+const path        = 'file://' + __dirname + '/accordion-not-multiselectable.html';
 
 // Label test suite in output
 test( '-------------------------------', ( t ) => {
-  t.comment( 'Running *Accordion* [multiselectable="true"] test suite.' );
+  t.comment( 'Running *Accordion* [multiselectable="false"] test suite.' );
   t.comment( '-------------------------------' );
   t.end();
 });
@@ -88,7 +88,7 @@ test( '4| Les entêtes de panneau n’ayant pas le focus ont la valeur « -1 �
 
 
 // test 5
-test( '5| Un « Click » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
+test( '5| Un « Click » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .evaluate(() => {
@@ -109,7 +109,7 @@ test( '5| Un « Click » sur un entête de panneau dont la valeur l’attribut
 
 
 // test 6
-test( '6| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
+test( '6| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
   loadBrowser( path ) // open browser
     .focus( '#tab2' )
     .key( 13 ) // `Enter` key
@@ -131,7 +131,7 @@ test( '6| Une pression sur la touche « Entrée » sur un entête de panneau d
 
 
 // test 7
-test( '7| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
+test( '7| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
   loadBrowser( path ) // open browser
     .focus( '#tab2' )
     .key( 32 ) // `Space` key
@@ -153,7 +153,7 @@ test( '7| Une pression sur la touche « Espace » sur un entête de panneau do
 
 
 // test 8
-test( '8| Un « Click » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
+test( '8| Un « Click » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .click( '#tab2[aria-expanded="true"]' )
@@ -175,7 +175,7 @@ test( '8| Un « Click » sur un entête de panneau dont la valeur l’attribut
 
 
 // test 9
-test( '9| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
+test( '9| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .focus( '#tab2[aria-expanded="true"]' )
@@ -198,7 +198,7 @@ test( '9| Une pression sur la touche « Entrée » sur un entête de panneau d
 
 
 // test 10
-test( '10| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
+test( '10| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .focus( '#tab2[aria-expanded="true"]' )
@@ -523,8 +523,8 @@ test( '28| A la fermeture de tous les panneaux, la fonction de callback correspo
       // close all tabs
       window.tablist.closeAll();
 
-      return document.querySelector( '#tab1' ).dataset.closeAllCB === 'true' &&
-             document.querySelector( '#tab2' ).dataset.closeAllCB === 'true' &&
+      return !document.querySelector( '#tab1' ).dataset.closeAllCB &&
+             !document.querySelector( '#tab2' ).dataset.closeAllCB &&
              document.querySelector( '#tab3' ).dataset.closeAllCB === 'true' &&
              !document.querySelector( '#tab4' ).dataset.closeAllCB;
     })
@@ -537,7 +537,7 @@ test( '28| A la fermeture de tous les panneaux, la fonction de callback correspo
 
 
 // test 29
-test( '29| Un « Click » sur une seconde entête de panneau garde le précédent panneaux ouvert', ( t ) => {
+test( '29| Un « Click » sur une seconde entête de panneau ferme le précédent panneaux ouvert', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab1' )
     .click( '#tab2' )
@@ -556,9 +556,9 @@ test( '29| Un « Click » sur une seconde entête de panneau garde le précéd
     })
     .end() // close browser
     .then(( results ) => {
-      t.equal( results.aria1Expanded, 'true', 'L’élément précédent doit être actif.' );
-      t.equal( results.aria1Hidden, 'false', 'L’élément précédent doit être affiché.' );
-      t.equal( results.aria1CB, undefined, 'La fonction de calback de fermeture ne doit pas être exécuté sur l’élément précédent.' );
+      t.equal( results.aria1Expanded, 'false', 'L’élément précédent doit être inactif.' );
+      t.equal( results.aria1Hidden, 'true', 'L’élément précédent doit être masqué.' );
+      t.equal( results.aria1CB, 'true', 'La fonction de calback de fermeture doit être exécuté sur l’élément précédent.' );
       t.equal( results.aria2Expanded, 'true', 'L’élément cliqué doit être actif.' );
       t.equal( results.aria2Hidden, 'false', 'L’élément cliqué doit être affiché.' );
       t.equal( results.aria2CB, undefined, 'La fonction de calback de fermeture ne doit pas être exécuté sur L’élément cliqué.' );
