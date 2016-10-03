@@ -88,7 +88,7 @@ test( '4| Les entêtes de panneau n’ayant pas le focus ont la valeur « -1 �
 
 
 // test 5
-test( '5| Un « Click » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
+test( '5| Un « Click » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .evaluate(() => {
@@ -109,7 +109,7 @@ test( '5| Un « Click » sur un entête de panneau dont la valeur l’attribut
 
 
 // test 6
-test( '6| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
+test( '6| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
   loadBrowser( path ) // open browser
     .focus( '#tab2' )
     .key( 13 ) // `Enter` key
@@ -131,7 +131,7 @@ test( '6| Une pression sur la touche « Entrée » sur un entête de panneau d
 
 
 // test 7
-test( '7| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
+test( '7| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
   loadBrowser( path ) // open browser
     .focus( '#tab2' )
     .key( 32 ) // `Space` key
@@ -153,7 +153,7 @@ test( '7| Une pression sur la touche « Espace » sur un entête de panneau do
 
 
 // test 8
-test( '8| Un « Click » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
+test( '8| Un « Click » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .click( '#tab2[aria-expanded="true"]' )
@@ -175,7 +175,7 @@ test( '8| Un « Click » sur un entête de panneau dont la valeur l’attribut
 
 
 // test 9
-test( '9| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
+test( '9| Une pression sur la touche « Entrée » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .focus( '#tab2[aria-expanded="true"]' )
@@ -198,7 +198,7 @@ test( '9| Une pression sur la touche « Entrée » sur un entête de panneau d
 
 
 // test 10
-test( '10| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
+test( '10| Une pression sur la touche « Espace » sur un entête de panneau dont la valeur de l’attribut « aria-expanded » est à « true » modifie la valeur de cet attribut en la passant à « false ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « false » à « true ».', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab2' )
     .focus( '#tab2[aria-expanded="true"]' )
