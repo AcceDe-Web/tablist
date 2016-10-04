@@ -7,14 +7,12 @@
   "scripts": {
     "test": "tape test/*.js | faucet",
     "build": "node build.js",
-    "postbuild": "npm test",
     "doc": "documentation build lib/*.js",
     "doc-lint": "documentation lint",
-    "doc-serve": "documentation serve"
+    "doc-serve": "documentation serve",
+    "version": "npm run test && npm run build && git add -A dist",
+    "postversion": "git push && git push --tags"
   },
-  "pre-push": [
-    "test"
-  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:AcceDe-Web/tablist.git"
@@ -39,7 +37,6 @@
     "documentation": "^4.0.0-beta2",
     "faucet": "0.0.1",
     "nightmare": "^2.3.3",
-    "pre-push": "^0.1.1",
     "tape": "^4.5.1",
     "uglify-js": "^2.7.3"
   }
