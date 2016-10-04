@@ -537,7 +537,7 @@ test( '28| A la fermeture de tous les panneaux, la fonction de callback correspo
 
 
 // test 29
-test( '29| Un « Click » sur une seconde entête de panneau garde le précédent panneaux ouvert', ( t ) => {
+test( '29| Un « Click » sur une seconde entête de panneau garde le précédent panneau ouvert', ( t ) => {
   loadBrowser( path ) // open browser
     .click( '#tab1' )
     .click( '#tab2' )
