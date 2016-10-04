@@ -1,6 +1,6 @@
 /**
  * accedeweb-tablist - WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines
- * @version v1.0.0
+ * @version v1.0.1
  * @link http://a11y.switch.paris/
  * @license ISC
  */
@@ -310,12 +310,14 @@
         if( controls ){
           tab.tabPanel = document.getElementById( controls );
         }
-        else if( tab.nextElementSibling && tab.nextElementSibling.hasAttribute( 'aria-labelledby' ) ){
-          tab.tabPanel = tab.nextElementSibling.getAttribute( 'aria-labelledby' ) === tab.id ? tab.nextElementSibling : null;
-          if( !tab.tabPanel ){
-            throw new Error( 'Could not find associated tabpanel for tab '+tab.id );
-          }
+        else if( tab.nextElementSibling && tab.nextElementSibling.getAttribute( 'aria-labelledby' ) === tab.id ){
+          tab.tabPanel = tab.nextElementSibling;
         }
+
+        if( !tab.tabPanel ){
+          throw new Error( 'Could not find associated tabpanel for tab '+tab.id+'. Use [aria-controls="tabpanelId"] on the [role=tab] element to link them together' );
+        }
+
         // link the tab to the tabpanel element
         tab.tabPanel.tab = tab;
 
@@ -452,6 +454,7 @@
           tablist.openedTab.forEach( function( openedTab ){
             openedTab.setAttribute( 'aria-expanded', false );
             openedTab.tabPanel.setAttribute( 'aria-hidden', true );
+            options.closeTab( openedTab );
           });
           // empty the array of opened tab because we closed them all
           tablist.openedTab.length = 0;
