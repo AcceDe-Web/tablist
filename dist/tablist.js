@@ -166,9 +166,9 @@
      * @param {DOMEvent} e - A `FocusEvent` or `KeyboardEvent` object
      */
     this.handlePanelFocus = function handlePanelFocus( e ){
-      e.preventDefault();
 
       if( e.target.doubleFocus ){
+        e.preventDefault();
         delete e.target.doubleFocus;
         return;
       }
