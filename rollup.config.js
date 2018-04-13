@@ -11,7 +11,9 @@ const banner = `/**
 `;
 
 const [ filename ] = pkg.main.split( '/' ).reverse();
-const name = filename.replace( '.js', '' );
+let name = filename.replace( '.js', '' );
+
+name = name.charAt( 0 ).toUpperCase() + name.slice( 1 );
 
 export default {
   input: pkg.module,
