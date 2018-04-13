@@ -6,7 +6,7 @@
   "main": "dist/tablist.js",
   "scripts": {
     "test": "tape test/*.js | faucet",
-    "build": "node build.js",
+    "build": "rollup -c && rollup -c rollup.config.minified.js",
     "doc": "documentation build lib/*.js",
     "doc-lint": "documentation lint",
     "doc-serve": "documentation serve",
@@ -32,12 +32,24 @@
     "url": "http://switch.paris"
   },
   "license": "ISC",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "IE 10"
+  ],
   "homepage": "http://a11y.switch.paris/",
   "devDependencies": {
-    "documentation": "^4.0.0-beta2",
+    "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "documentation": "^6.2.0",
+    "eslint": "^4.19.1",
+    "eslint-config-idiomatic": "^4.0.0",
     "faucet": "0.0.1",
     "nightmare": "^2.3.3",
-    "tape": "^4.5.1",
-    "uglify-js": "^2.7.3"
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-uglify": "^3.0.0",
+    "tape": "^4.9.0"
   }
 }
