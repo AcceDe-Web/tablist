@@ -9,7 +9,8 @@
     "idiomatic"
   ],
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaVersion": 2017
   },
   "rules": {
     "space-before-blocks": 0,
