@@ -6,7 +6,7 @@
   "main": "dist/tablist.js",
   "module": "lib/index.js",
   "scripts": {
-    "test": "tape test/*.js | faucet",
+    "test": "tape test/*.js | tap-diff",
     "build": "rollup -c && rollup -c rollup.config.minified.js",
     "doc": "documentation build lib/*.js",
     "doc-lint": "documentation lint",
@@ -46,12 +46,11 @@
     "documentation": "^6.2.0",
     "eslint": "^4.19.1",
     "eslint-config-idiomatic": "^4.0.0",
-    "faucet": "0.0.1",
-    "nightmare": "^2.3.3",
     "puppeteer": "^1.3.0",
     "rollup": "^0.57.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-uglify": "^3.0.0",
+    "tap-diff": "^0.1.1",
     "tape": "^4.9.0"
   }
 }
