@@ -99,19 +99,21 @@
     <footer role="contentinfo"></footer>
     <script src="../dist/tablist.js"></script>
     <script>
-      function close( tab ) {
+      function close( tab, tabPanel ) {
         tab.dataset.closeCB = true;
       }
 
-      function open( tab ) {
+      function open( tab, tabPanel ) {
         tab.dataset.openCB = true;
       }
 
       var list = document.querySelector( '[role=tablist]' );
-      var tablist = new window.Tablist( list, {
-        closeTab: close,
-        openTab: open
-      });
+      var tablist = new window.Tablist( list );
+
+      tablist.on( 'show', open );
+      tablist.on( 'hide', close );
+
+      tablist.mount();
     </script>
   </body>
 </html>

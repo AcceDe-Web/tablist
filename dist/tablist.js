@@ -12,6 +12,7 @@
 }(this, (function () { 'use strict';
 
   /*eslint no-fallthrough: "off"*/
+  const callbackEvents = ['hide', 'show'];
 
   /**
    * Tablist constructor
@@ -20,7 +21,7 @@
    */
   class Tablist {
 
-    constructor(el, options) {
+    constructor(el) {
       if (!el || !el.nodeName) {
         throw new Error('No DOM node provided. Abort.');
       }
@@ -29,18 +30,13 @@
 
       this.tablist = {};
 
-      this.options = {
-        closeTab: options && options.closeTab || this._noop,
-        openTab: options && options.openTab || this._noop
-      };
+      this.callbacks = {};
 
       this._handleDisplay = this._handleDisplay.bind(this);
       this._handleFocus = this._handleFocus.bind(this);
       this._handleTab = this._handleTab.bind(this);
       this._handlePanelFocus = this._handlePanelFocus.bind(this);
       this._handlePanel = this._handlePanel.bind(this);
-
-      this.mount();
     }
 
     /**
@@ -286,14 +282,13 @@
       tabPanel.setAttribute('aria-hidden', !show);
 
       if (show) {
-        this.tablist.openedTab = tab;
         this.tablist.openedIndex = index;
 
         if (this.tablist.openedIndex !== undefined) {
-          this.options.openTab(tab);
+          this.trigger('show', [tab, tabPanel]);
         }
       } else if (this.tablist.openedIndex !== undefined) {
-        this.options.closeTab(tab);
+        this.trigger('hide', [tab, tabPanel]);
       }
     }
 
@@ -324,20 +319,15 @@
           throw new Error(`Could not find associated tabpanel for tab ${tab.id}. Use [aria-controls="tabpanelId"] on the [role="tab"] element to link them together`);
         }
 
-        // link the tab to the tabpanel element
-        // tabPanel.tab = tab;
-
-        // tab.tabList = tablist;
+        // store the tab and the tabpanel on their respective arrays on the tablist
+        this.tablist.tabs.push(tab);
+        this.tablist.tabPanels.push(tabPanel);
 
         tab.disabled = tab.hasAttribute('disabled') || tab.getAttribute('aria-disabled') === 'true';
 
         // if there's no opened tab yet
-        if (tab.hasAttribute('data-tab-open') && !tab.disabled) {
-          if (!this.tablist.openedTab) {
-            // store the tab in the openedTab array
-            // this.tablist.openedTab = tab;
-            // this.tablist.openedIndex = index;
-
+        if (tab.getAttribute('data-expanded') === 'true' && !tab.disabled) {
+          if (this.tablist.openedIndex === undefined) {
             this._toggleDisplay(index, true);
 
             openedTab = true;
@@ -345,7 +335,7 @@
         }
 
         // remove setup data attributes
-        tab.removeAttribute('data-tab-open');
+        tab.removeAttribute('data-expanded');
 
         // get first non-disabled tab
         if (firstTabIndex === undefined && !tab.disabled) {
@@ -356,10 +346,6 @@
         tab.setAttribute('tabindex', -1);
         tab.setAttribute('aria-expanded', openedTab);
         tabPanel.setAttribute('aria-hidden', !openedTab);
-
-        // store the tab and the tabpanel on their respective arrays on the tablist
-        this.tablist.tabs.push(tab);
-        this.tablist.tabPanels.push(tabPanel);
 
         // subscribe internal events for tab and tap panel
         tab.addEventListener('click', this._handleDisplay);
@@ -374,27 +360,61 @@
       this.tablist.tabPanelsLength = this.tablist.tabPanels.length;
 
       // set the tabindex so the first opened tab or the first non-disabled tab can be focused on tab navigation
-      if (this.tablist.openedTab) {
-        this.tablist.openedTab.setAttribute('tabindex', 0);
+      if (this.tablist.openedIndex !== undefined) {
+        this.tablist.tabs[this.tablist.openedIndex].setAttribute('tabindex', 0);
       }
       // if there's no opened tab and it's not an accordion open the first tab
-      else if (!this.tablist.openedTab) {
+      else {
           this._toggleDisplay(firstTabIndex, true);
-          this.tablist.tabs[firstTabIndex].setAttribute('tabindex', 0);
-          // this.tablist.tabs[ firstTabIndex ].setAttribute( 'aria-expanded', true );
-          // this.tablist.tabPanels[ firstTabIndex ].setAttribute( 'aria-hidden', false );
 
-          // this.tablist.openedTab = this.tablist.tabs[ firstTabIndex ];
-        } else {
           this.tablist.tabs[firstTabIndex].setAttribute('tabindex', 0);
         }
+    }
+
+    off(event, callback) {
+      if (!this.callbacks[event]) {
+        return;
+      }
+
+      const callbackIndex = this.callbacks[event].indexOf(callback);
+
+      if (callbackIndex < 0) {
+        return;
+      }
+
+      this.callbacks[event].splice(callbackIndex, 1);
+    }
+
+    on(event, callback) {
+      if (callbackEvents.indexOf(event) < 0) {
+        return;
+      }
+
+      if (!this.callbacks[event]) {
+        this.callbacks[event] = [];
+      }
+
+      this.callbacks[event].push(callback);
     }
 
     /**
      * Returns the opened tab or array of opened tabs
      */
     get openedTab() {
-      return this.tablist.openedTab;
+      const tab = this.tablist.tabs[this.tablist.openedIndex];
+      const tabPanel = this.tablist.tabPanels[this.tablist.openedIndex];
+
+      return [tab, tabPanel];
+    }
+
+    trigger(eventName, params) {
+      if (!this.callbacks[eventName]) {
+        return;
+      }
+
+      this.callbacks[eventName].forEach(callback => {
+        callback.apply(this, params);
+      });
     }
 
     /**
