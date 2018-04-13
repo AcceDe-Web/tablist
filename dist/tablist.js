@@ -309,7 +309,7 @@
       this.tablist.tabPanels = [];
 
       // loop on each tab elements to find tabpanel elements and update their attributes
-      Array.from(this.el.querySelectorAll('[role=tab]')).forEach((tab, index) => {
+      Array.prototype.slice.call(this.el.querySelectorAll('[role=tab]')).forEach((tab, index) => {
         const controls = tab.getAttribute('aria-controls');
         let tabPanel;
 
@@ -400,8 +400,7 @@
     /**
      * unbind tablist
      */
-    unmount(clean) {
-
+    unmount() {
       this.tablist.tabs.forEach((tab, index) => {
         const tabPanel = this.tablist.tabPanels[index];
 

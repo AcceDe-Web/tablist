@@ -1,5 +1,6 @@
 import pkg from './package.json';
 import babel from 'rollup-plugin-babel';
+import replace from 'rollup-plugin-replace';
 
 const banner = `/**
  * ${pkg.name} - ${pkg.description}
@@ -22,6 +23,9 @@ export default {
     name
   },
   plugins: [
+    replace({
+      'Array.from': 'Array.prototype.slice.call'
+    }),
     babel({
       exclude: 'node_modules/**'
     })
