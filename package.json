@@ -4,6 +4,7 @@
   "version": "1.0.2",
   "description": "WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines",
   "main": "dist/tablist.js",
+  "module": "lib/index.js",
   "scripts": {
     "test": "tape test/*.js | faucet",
     "build": "rollup -c && rollup -c rollup.config.minified.js",
