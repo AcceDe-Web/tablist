@@ -86,8 +86,8 @@ test( '4| Les onglets n’ayant pas le focus ont la valeur « false » pour l’
   loadBrowser( path ) // open browser
     .evaluate(() => {
       return {
-        actual: document.querySelectorAll( '[aria-selected="false"]' ).length,
-        expected: document.querySelectorAll( '[role="tab"]' ).length
+        actual: document.querySelectorAll( '[aria-selected="true"]' ).length,
+        expected: 0
       };
     })
     .end() // close browser

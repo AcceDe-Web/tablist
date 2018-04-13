@@ -70,16 +70,16 @@
         </h2>
         <ul role="tablist">
           <li>
-            <button id="tab1" role="tab" aria-selected="false" aria-expanded="true" aria-controls="tabpanel1">Onglet n<sup>o</sup> 1</button>
+            <button id="tab1" role="tab" aria-controls="tabpanel1">Onglet n<sup>o</sup> 1</button>
           </li>
           <li>
-            <button id="tab2" role="tab" aria-selected="false" aria-expanded="true" aria-controls="tabpanel2">Onglet n<sup>o</sup> 2</button>
+            <button id="tab2" role="tab" aria-controls="tabpanel2">Onglet n<sup>o</sup> 2</button>
           </li>
           <li>
-            <button id="tab3" role="tab" aria-selected="false" aria-expanded="true" aria-controls="tabpanel3" disabled="disabled">Onglet désactivé</button>
+            <button id="tab3" role="tab" aria-controls="tabpanel3" disabled="disabled">Onglet désactivé</button>
           </li>
           <li>
-            <button id="tab4" role="tab" aria-selected="false" aria-expanded="true" aria-controls="tabpanel4">Onglet n<sup>o</sup> 4</button>
+            <button id="tab4" role="tab" aria-controls="tabpanel4">Onglet n<sup>o</sup> 4</button>
           </li>
         </ul>
         <div id="tabpanel1" role="tabpanel" aria-hidden="false">
@@ -97,7 +97,7 @@
       </section>
     </main>
     <footer role="contentinfo"></footer>
-    <script src="../lib/tablist.js"></script>
+    <script src="../dist/tablist.js"></script>
     <script>
       function close( tab ) {
         tab.dataset.closeCB = true;
@@ -108,7 +108,7 @@
       }
 
       var list = document.querySelector( '[role=tablist]' );
-      var tablist = new window.Tablist( list, {
+      var onglet = new window.tablist( list, {
         closeTab: close,
         openTab: open
       });
