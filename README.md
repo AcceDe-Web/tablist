@@ -1,37 +1,14 @@
 # AcceDe Web - tablist
 
-WAI-ARIA accordion and tab plugin without dependencies.
+WAI-ARIA tab plugin without dependencies.
 
 ## Requirements
 
 ### HTML
 
-Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`. `aria-multiselectable` attribute on the tab list and `aria-labelledby` attribute on each tab panels when wanting an accordion instead of tabs. `id` attribute either on the tabs or the tab panel whether we want an accordion or tabs.
+Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`.
 
-#### Example of accordion HTML structure
-
-```html
-<div role="tablist" aria-multiselectable="true">
-  <h3 id="tab1" role="tab">Header 1</h3>
-  <div role="tabpanel" aria-labelledby="tab1">
-    <p>---</p>
-  </div>
-  <h3 id="tab2" role="tab">Header 2</h3>
-  <div role="tabpanel" aria-labelledby="tab2">
-    <p>---</p>
-  </div>
-  <h3 id="tab3" role="tab">Header 3</h3>
-  <div role="tabpanel" aria-labelledby="tab3">
-    <p>---</p>
-  </div>
-  <h3 id="tab4" role="tab">Header 4</h3>
-  <div role="tabpanel" aria-labelledby="tab4">
-    <p>---</p>
-  </div>
-</div>
-```
-
-#### Example of tabs HTML structure
+#### HTML structure
 
 ```html
 <ul role="tablist">
@@ -57,12 +34,12 @@ Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`. `aria-multisel
 
 An `aria-disabled` attribute set to `true` on a `tab` will disable the `tab` and the associated `tabpanel` making them unfocusable and unselectable.
 
-If you wish to open one or more specific tab when the script starts, just add the `data-tab-open` attribute on the desired `tab`:
+If you wish to open one specific tab when the script starts, just add the `data-expanded` attribute with the value of `true` on the desired `tab`:
 
 ```html
 <ul role="tablist">
   <li role="tab" aria-controls="tab-1">Tab 1</li>
-  <li role="tab" aria-controls="tab-2" data-tab-open>Tab 2</li>
+  <li role="tab" aria-controls="tab-2" data-expanded="true">Tab 2</li>
   <li role="tab" aria-controls="tab-3">Tab 3</li>
   <li role="tab" aria-controls="tab-4">Tab 4</li>
 </ul>
@@ -111,25 +88,30 @@ Using the later, the script will be available on `window` under the namespace `T
 Now to kick off the script:
 
 ```js
+// get the tablist element
 var list = document.querySelector( '[role="tablist"]' );
+
+// create the tablist instance
 var tablist = new window.Tablist( list );
 
-// or you can pass callbacks
-
-var tablist = new window.Tablist( list, {
-  openTab: openTabCallback,
-  closeTab: closeTabCallback
+// optionnaly add callbacks to on show and hide a tab
+tablist.on( 'show', function( tab, tabPanel ){
+  …
 });
+
+tablist.on( 'hide', function( tab, tabPanel ){
+  …
+});
+
+// start the plugin
+tablist.mount();
 ```
 
 ## Parameters
 
-The script takes two parameters:
+The script takes one parameter:
 
 * the `tablist` <abbr title="Document Object Model">DOM</abbr> element
-* an optional object with two callbacks:
-  * `openTab` callback will be executed when a new tab is open, passing the current tab <abbr title="Document Object Model">DOM</abbr> element as a parameter
-  * `closeTab` callback will be executed when a tab is closed, passing the closed tab <abbr title="Document Object Model">DOM</abbr> element as a parameter
 
 As the script takes only one `tablist` element as parameter you have to loop over each `tablist` to kick off the script on each of them.
 
@@ -137,29 +119,32 @@ As the script takes only one `tablist` element as parameter you have to loop ove
 var lists = document.querySelectorAll( '[role="tablist"]' );
 
 Array.prototype.forEach.call( lists, function( list ) {
-  new window.Tablist( list );
+  new window.Tablist( list ).mount();
 });
 ```
 
 ## Methods
 
-The `Tablist` constructor returns two methods:
+The `Tablist` constructor returns 4 methods:
 
-* `closeAll` will allow you to close all the panels, except when in tab mode as at least one panel must be displayed
-* `openedTab` will return an array of opened tabs
+* `mount()` - start the magic
+* `unmount()` - unbind keyboard and mouse events
+* `on( event, callback )` - bind a callback to either the `show` or `hide` event triggered when changing tab. Both `tab` and `tabPanel` HTMLElement are passed on the callback
+* `off( event, callback )` - unbind a callback to either the `show` or `hide` event triggered when changing tab
 
 ## References
 
-Each `tab` and `tabpanel` have references to the `tablist` element and `tab` or `tabpanel`:
+To know which `tab` and `tabPanel` is open use tablist.openedTab. It will return an array containing `tab` and `tabPanel`
 
 ```js
-function openCallback( openTab ){
-  console.log( openTab.tabList );
-  // -> returns the parent DOM element with the role 'tablist'
+// ES6 destructuring array
+const [ tab, tabPanel ] = tablist.openedTab;
 
-  console.log( opentTab.tabPanel );
-  // -> returns the tabpanel DOM element linked to the tab
-}
+// ES5
+var elements = tablist.openedTab;
+
+elements[ 0 ]; // return the `tab`
+elements[ 1 ]; // return the `tabPanel`
 ```
 
 This allows you to add or remove your own `class` for <abbr title="Cascading Style Sheets">CSS</abbr> purposes or animate the opening or closing of the tab panel.
@@ -173,6 +158,8 @@ The keyboard interactions are based on [Atalan's AcceDe Web guidelines (in Frenc
 * `Right Arrow` - with focus on a tab, pressing the right arrow will move focus to the next tab in the tab list and activate that tab. Pressing the right arrow when the focus is on the last tab in the tab list will move focus to and activate the first tab in the list.
 * `Up arrow` - behaves the same as left arrow in order to support vertical tabs.
 * `Down arrow` - behaves the same as right arrow in order to support vertical tabs.
+* `Home` - with focus on a tab, pressing the Home key will move the focus to the first tab
+* `End` - with focus on a tab, pressing the End key will move the focus to the last tab
 * `Control+Up Arrow` - with focus anywhere within the tab panel, pressing Control+Up Arrow will move focus to the tab for that panel. This is not standard behavior.
 * `Control+PageUp` - When focus is inside of a tab panel, pressing Control+PageUp moves focus to the tab of the previous tab in the tab list and activates that tab. When focus is in the first tab panel in the tab list, pressing Control+PageUp will move focus to the last tab in the tab list and activate that tab.
 * `Control+PageDown` When focus is inside of a tab panel, pressing Control+PageDown moves focus to the tab of the next tab in the tab list and activates that tab. When focus is in the last tab panel in the tab list, pressing Control+PageUpwill move focus to the first tab in the tab list and activate that tab.
@@ -194,11 +181,11 @@ This plugin is tested against the following browsers:
 Install the project dependencies:
 
 ```bash
-  $ npm install
+$ npm install
 ```
 
 Run the automated test cases:
 
 ```bash
-  $ npm test
+$ npm test
 ```
