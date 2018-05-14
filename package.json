@@ -6,7 +6,7 @@
   "main": "dist/tablist.js",
   "module": "lib/index.js",
   "scripts": {
-    "build": "rollup -c && cross-env rollup -c",
+    "build": "rollup -c && cross-env NODE_ENV=production rollup -c",
     "doc-lint": "documentation lint",
     "doc-serve": "documentation serve",
     "doc": "documentation build lib/*.js",
