@@ -6,14 +6,15 @@
   "main": "dist/tablist.js",
   "module": "lib/index.js",
   "scripts": {
-    "build": "rollup -c && rollup -c rollup.config.minified.js",
+    "build": "rollup -c && cross-env rollup -c",
     "doc-lint": "documentation lint",
     "doc-serve": "documentation serve",
     "doc": "documentation build lib/*.js",
     "postversion": "git push && git push --tags",
     "test": "tape test/*.js | tap-diff",
-    "version": "npm run test && npm run build && git add -A dist",
-    "watch": "watch 'npm run build' lib --interval=1"
+    "version": "npm run build && npm run test && git add -A dist",
+    "watch:build": "watch 'npm run build' lib --interval=1",
+    "watch:test": "watch 'npm test' {dist,test} --interval=1"
   },
   "repository": {
     "type": "git",
