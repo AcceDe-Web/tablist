@@ -15,7 +15,7 @@ const banner = `/**
 `;
 
 const [ filename ] = pkg.main.split( '/' ).reverse();
-const name = filename.replace( '.js', '' );
+let name = filename.replace( '.js', '' );
 const file = minify ? pkg.main.replace( '.js', '.min.js' ) : pkg.main;
 const plugins = [
   replace({
@@ -25,6 +25,8 @@ const plugins = [
     exclude: 'node_modules/**'
   })
 ];
+
+name = name.charAt( 0 ).toUpperCase() + name.slice( 1 );
 
 if( minify ){
   plugins.push( uglify({
