@@ -34,12 +34,12 @@ Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`.
 
 An `aria-disabled` attribute set to `true` on a `tab` will disable the `tab` and the associated `tabpanel` making them unfocusable and unselectable.
 
-If you wish to open one specific tab when the script starts, just add the `data-expanded` attribute with the value of `true` on the desired `tab`:
+If you wish to open one specific tab when the script starts, just add the `data-open` attribute with the value of `true` on the desired `tab`:
 
 ```html
 <ul role="tablist">
   <li role="tab" aria-controls="tab-1">Tab 1</li>
-  <li role="tab" aria-controls="tab-2" data-expanded="true">Tab 2</li>
+  <li role="tab" aria-controls="tab-2" data-open="true">Tab 2</li>
   <li role="tab" aria-controls="tab-3">Tab 3</li>
   <li role="tab" aria-controls="tab-4">Tab 4</li>
 </ul>
@@ -80,7 +80,7 @@ import Tablist from accedeweb-tablist;
 or downloaded from Github and added to the page (minified and non minified versions available in the `dist` folder)
 
 ```html
-<script src="./js/accedeweb-tablist.min.js"></script>
+<script src="./js/tablist.min.js"></script>
 ```
 
 Using the later, the script will be available on `window` under the namespace `Tablist`.
@@ -127,27 +127,28 @@ Array.prototype.forEach.call( lists, function( list ) {
 
 The `Tablist` constructor returns 4 methods:
 
-* `mount()` - start the magic
+* `mount()` - bind all events and apply required attributes
 * `unmount()` - unbind keyboard and mouse events
 * `on( event, callback )` - bind a callback to either the `show` or `hide` event triggered when changing tab. Both `tab` and `tabPanel` HTMLElement are passed on the callback
 * `off( event, callback )` - unbind a callback to either the `show` or `hide` event triggered when changing tab
 
-## References
+## Properties
 
-To know which `tab` and `tabPanel` is open use tablist.openedTab. It will return an array containing `tab` and `tabPanel`
+To know which `tab` and `tabPanel` is open use `tablist.current`. It will return an array containing `tab` and `tabPanel`
 
 ```js
 // ES6 destructuring array
-const [ tab, tabPanel ] = tablist.openedTab;
+const { tab, tabPanel } = tablist.current;
+
+tab; // return the `tab`
+tabPanel; // return the `tabPanel`
 
 // ES5
-var elements = tablist.openedTab;
+var elements = tablist.current;
 
-elements[ 0 ]; // return the `tab`
-elements[ 1 ]; // return the `tabPanel`
+elements.tab; // return the `tab`
+elements.tabPanel; // return the `tabPanel`
 ```
-
-This allows you to add or remove your own `class` for <abbr title="Cascading Style Sheets">CSS</abbr> purposes or animate the opening or closing of the tab panel.
 
 ## Keyboard Interaction
 

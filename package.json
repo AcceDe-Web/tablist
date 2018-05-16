@@ -1,6 +1,6 @@
 {
   "title": "AcceDe Web - tablist",
-  "name": "accedeweb-tablist",
+  "name": "@accedeweb/tablist",
   "version": "1.0.2",
   "description": "WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines",
   "main": "dist/tablist.js",

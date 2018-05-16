@@ -69,18 +69,10 @@
           </svg><span>Démonstration</span>
         </h2>
         <ul role="tablist">
-          <li>
-            <button id="tab1" role="tab" aria-controls="tabpanel1">Onglet n<sup>o</sup> 1</button>
-          </li>
-          <li>
-            <button id="tab2" role="tab" aria-controls="tabpanel2">Onglet n<sup>o</sup> 2</button>
-          </li>
-          <li>
-            <button id="tab3" role="tab" aria-controls="tabpanel3" disabled="disabled">Onglet désactivé</button>
-          </li>
-          <li>
-            <button id="tab4" role="tab" aria-controls="tabpanel4">Onglet n<sup>o</sup> 4</button>
-          </li>
+          <li id="tab1" role="tab" aria-controls="tabpanel1">Onglet n<sup>o</sup> 1</li>
+          <li id="tab2" role="tab" aria-controls="tabpanel2">Onglet n<sup>o</sup> 2</li>
+          <li id="tab3" role="tab" aria-controls="tabpanel3" disabled="disabled">Onglet désactivé</li>
+          <li id="tab4" role="tab" aria-controls="tabpanel4">Onglet n<sup>o</sup> 4</li>
         </ul>
         <div id="tabpanel1" role="tabpanel" aria-hidden="false">
           <p>Le saviez-vous ? Le motif de conception « onglet » est très similaire à celui des « accordéons ». Ils partagent en effet les mêmes rôles ARIA : <em lang="en">tablist</em>, <em lang="en">tab</em> et <em lang="en">tabpanel</em>. Ils se démarquent principalement par les raccourcis clavier utilisables. N’hésitez pas à aller voir la <a href="http://www.accede-web.com/notices/interface-riche/accordeons/">notice d’accessibilité des accordéons</a> ainsi que la page de <a href="/accordion.html">démonstration du composant « accordéons »</a>.</p>
@@ -108,7 +100,7 @@
       }
 
       var list = document.querySelector( '[role=tablist]' );
-      var tablist = new window.Tablist( list );
+      window.tablist = new window.Tablist( list );
 
       tablist.on( 'show', open );
       tablist.on( 'hide', close );

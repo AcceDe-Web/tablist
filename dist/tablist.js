@@ -1,5 +1,5 @@
 /**
- * accedeweb-tablist - WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines
+ * @accedeweb/tablist - WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines
  * @version v1.0.2
  * @link http://a11y.switch.paris/
  * @license ISC
@@ -28,9 +28,9 @@
 
       this.el = el;
 
-      this.tablist = {};
+      this._tablist = {};
 
-      this.callbacks = {};
+      this._callbacks = {};
 
       this._handleDisplay = this._handleDisplay.bind(this);
       this._handleFocus = this._handleFocus.bind(this);
@@ -45,8 +45,8 @@
     _firstActiveTab() {
       let activeTab;
 
-      for (let i = 0; i < this.tablist.tabs.length; i++) {
-        if (!this.tablist.tabs[i].disabled) {
+      for (let i = 0; i < this._tablist.tabs.length; i++) {
+        if (!this._tablist.tabs[i].disabled) {
           activeTab = i;
           break;
         }
@@ -73,7 +73,7 @@
         tab.focus();
       }
 
-      this._toggleDisplay(this.tablist.tabs.indexOf(tab));
+      this._toggleDisplay(this._tablist.tabs.indexOf(tab));
     }
 
     /**
@@ -87,9 +87,9 @@
         return;
       }
 
-      this.tablist.currentTabIndex = this.tablist.tabs.indexOf(tab);
+      this._tablist.currentTabIndex = this._tablist.tabs.indexOf(tab);
 
-      this._select(this.tablist.tabs[this.tablist.currentTabIndex]);
+      this._select(this._tablist.tabs[this._tablist.currentTabIndex]);
     }
 
     /**
@@ -98,7 +98,7 @@
      */
     _handlePanel(e) {
 
-      if (this.tablist.currentTabIndex === undefined) {
+      if (this._tablist.currentTabIndex === undefined) {
         this._handlePanelFocus(e);
       }
 
@@ -108,7 +108,7 @@
           if (e.ctrlKey) {
             e.preventDefault();
             // focus the previous tab
-            this._switchTab(this.tablist.currentTabIndex - 1);
+            this._switchTab(this._tablist.currentTabIndex - 1);
           }
           break;
         // ctrl + page down
@@ -116,7 +116,7 @@
           if (e.ctrlKey) {
             e.preventDefault();
             // focus the next tab
-            this._switchTab(this.tablist.currentTabIndex + 1);
+            this._switchTab(this._tablist.currentTabIndex + 1);
           }
           break;
 
@@ -126,7 +126,7 @@
           if (e.ctrlKey) {
             e.preventDefault();
             // focus linked tab
-            this._switchTab(this.tablist.currentTabIndex);
+            this._switchTab(this._tablist.currentTabIndex);
           }
           break;
       }
@@ -147,7 +147,7 @@
 
       const tabPanel = e.currentTarget;
 
-      this.tablist.currentTabIndex = this.tablist.tabPanels.indexOf(tabPanel);
+      this._tablist.currentTabIndex = this._tablist.tabPanels.indexOf(tabPanel);
 
       // prevent double focus event when the inputs are focused
       if (['radio', 'checkbox'].indexOf(e.target.type) >= 0) {
@@ -161,7 +161,7 @@
      */
     _handleTab(e) {
 
-      if (this.tablist.currentTabIndex === undefined) {
+      if (this._tablist.currentTabIndex === undefined) {
         this._handleFocus(e);
       }
 
@@ -178,7 +178,7 @@
         case 35:
           e.preventDefault();
           // focus the last tab
-          this._switchTab(this.tablist.tabs.length - 1);
+          this._switchTab(this._tablist.tabs.length - 1);
           break;
 
         // home
@@ -194,7 +194,7 @@
         case 38:
           e.preventDefault();
           // focus the previous tab
-          this._switchTab(this.tablist.currentTabIndex - 1);
+          this._switchTab(this._tablist.currentTabIndex - 1);
           break;
 
         // right
@@ -203,7 +203,7 @@
         case 40:
           e.preventDefault();
           // focus the next tab
-          this._switchTab(this.tablist.currentTabIndex + 1);
+          this._switchTab(this._tablist.currentTabIndex + 1);
           break;
       }
     }
@@ -220,7 +220,7 @@
      */
     _select(tabToSelect) {
       // loop on each tab
-      this.tablist.tabs.forEach((tab, index) => {
+      this._tablist.tabs.forEach((tab, index) => {
         const shouldSelect = tabToSelect === tab;
 
         tab.setAttribute('aria-selected', shouldSelect);
@@ -240,25 +240,25 @@
     _switchTab(index) {
 
       // handle disabled tab
-      if (this.tablist.tabs[index] && this.tablist.tabs[index].disabled) {
+      if (this._tablist.tabs[index] && this._tablist.tabs[index].disabled) {
 
         // cycling forward? Then go one item farther
-        const newIndex = index > this.tablist.currentTabIndex ? index + 1 : index - 1;
+        const newIndex = index > this._tablist.currentTabIndex ? index + 1 : index - 1;
 
         this._switchTab(newIndex);
 
         return;
       }
 
-      this.tablist.currentTabIndex = index;
+      this._tablist.currentTabIndex = index;
 
-      if (this.tablist.currentTabIndex < this._firstActiveTab()) {
-        this.tablist.currentTabIndex = this.tablist.tabsLength - 1;
-      } else if (this.tablist.currentTabIndex >= this.tablist.tabsLength) {
-        this.tablist.currentTabIndex = this._firstActiveTab();
+      if (this._tablist.currentTabIndex < this._firstActiveTab()) {
+        this._tablist.currentTabIndex = this._tablist.tabsLength - 1;
+      } else if (this._tablist.currentTabIndex >= this._tablist.tabsLength) {
+        this._tablist.currentTabIndex = this._firstActiveTab();
       }
 
-      this.tablist.tabs[this.tablist.currentTabIndex].focus();
+      this._tablist.tabs[this._tablist.currentTabIndex].focus();
     }
 
     /**
@@ -266,30 +266,40 @@
      * @param {DOMElement} tab - Tab element
      */
     _toggleDisplay(index, show = true) {
-      if (show && index === this.tablist.openedIndex) {
+      if (show && index === this._tablist.openedIndex) {
         return;
       }
 
-      const tab = this.tablist.tabs[index];
-      const tabPanel = this.tablist.tabPanels[index];
+      const tab = this._tablist.tabs[index];
+      const tabPanel = this._tablist.tabPanels[index];
 
       // close the previous tab
-      if (show && this.tablist.openedIndex !== undefined) {
-        this._toggleDisplay(this.tablist.openedIndex, false);
+      if (show && this._tablist.openedIndex !== undefined) {
+        this._toggleDisplay(this._tablist.openedIndex, false);
       }
 
       tab.setAttribute('aria-expanded', show);
       tabPanel.setAttribute('aria-hidden', !show);
 
       if (show) {
-        this.tablist.openedIndex = index;
+        this._tablist.openedIndex = index;
 
-        if (this.tablist.openedIndex !== undefined) {
-          this.trigger('show', [tab, tabPanel]);
+        if (this._tablist.openedIndex !== undefined) {
+          this._trigger('show', [tab, tabPanel]);
         }
-      } else if (this.tablist.openedIndex !== undefined) {
-        this.trigger('hide', [tab, tabPanel]);
+      } else if (this._tablist.openedIndex !== undefined) {
+        this._trigger('hide', [tab, tabPanel]);
       }
+    }
+
+    _trigger(eventName, params) {
+      if (!this._callbacks[eventName]) {
+        return;
+      }
+
+      this._callbacks[eventName].forEach(callback => {
+        callback.apply(this, params);
+      });
     }
 
     /**
@@ -300,8 +310,8 @@
       let openedTab = false;
 
       // create reference arrays
-      this.tablist.tabs = [];
-      this.tablist.tabPanels = [];
+      this._tablist.tabs = [];
+      this._tablist.tabPanels = [];
 
       // loop on each tab elements to find tabpanel elements and update their attributes
       Array.prototype.slice.call(this.el.querySelectorAll('[role=tab]')).forEach((tab, index) => {
@@ -320,14 +330,14 @@
         }
 
         // store the tab and the tabpanel on their respective arrays on the tablist
-        this.tablist.tabs.push(tab);
-        this.tablist.tabPanels.push(tabPanel);
+        this._tablist.tabs.push(tab);
+        this._tablist.tabPanels.push(tabPanel);
 
         tab.disabled = tab.hasAttribute('disabled') || tab.getAttribute('aria-disabled') === 'true';
 
         // if there's no opened tab yet
         if (tab.getAttribute('data-expanded') === 'true' && !tab.disabled) {
-          if (this.tablist.openedIndex === undefined) {
+          if (this._tablist.openedIndex === undefined) {
             this._toggleDisplay(index, true);
 
             openedTab = true;
@@ -356,33 +366,33 @@
       });
 
       // store constants
-      this.tablist.tabsLength = this.tablist.tabs.length;
-      this.tablist.tabPanelsLength = this.tablist.tabPanels.length;
+      this._tablist.tabsLength = this._tablist.tabs.length;
+      this._tablist.tabPanelsLength = this._tablist.tabPanels.length;
 
       // set the tabindex so the first opened tab or the first non-disabled tab can be focused on tab navigation
-      if (this.tablist.openedIndex !== undefined) {
-        this.tablist.tabs[this.tablist.openedIndex].setAttribute('tabindex', 0);
+      if (this._tablist.openedIndex !== undefined) {
+        this._tablist.tabs[this._tablist.openedIndex].setAttribute('tabindex', 0);
       }
       // if there's no opened tab and it's not an accordion open the first tab
       else {
           this._toggleDisplay(firstTabIndex, true);
 
-          this.tablist.tabs[firstTabIndex].setAttribute('tabindex', 0);
+          this._tablist.tabs[firstTabIndex].setAttribute('tabindex', 0);
         }
     }
 
     off(event, callback) {
-      if (!this.callbacks[event]) {
+      if (!this._callbacks[event]) {
         return;
       }
 
-      const callbackIndex = this.callbacks[event].indexOf(callback);
+      const callbackIndex = this._callbacks[event].indexOf(callback);
 
       if (callbackIndex < 0) {
         return;
       }
 
-      this.callbacks[event].splice(callbackIndex, 1);
+      this._callbacks[event].splice(callbackIndex, 1);
     }
 
     on(event, callback) {
@@ -390,39 +400,32 @@
         return;
       }
 
-      if (!this.callbacks[event]) {
-        this.callbacks[event] = [];
+      if (!this._callbacks[event]) {
+        this._callbacks[event] = [];
       }
 
-      this.callbacks[event].push(callback);
+      this._callbacks[event].push(callback);
     }
 
     /**
      * Returns the opened tab or array of opened tabs
      */
-    get openedTab() {
-      const tab = this.tablist.tabs[this.tablist.openedIndex];
-      const tabPanel = this.tablist.tabPanels[this.tablist.openedIndex];
+    get current() {
+      const tab = this._tablist.tabs[this._tablist.openedIndex];
+      const tabPanel = this._tablist.tabPanels[this._tablist.openedIndex];
 
-      return [tab, tabPanel];
-    }
-
-    trigger(eventName, params) {
-      if (!this.callbacks[eventName]) {
-        return;
-      }
-
-      this.callbacks[eventName].forEach(callback => {
-        callback.apply(this, params);
-      });
+      return {
+        tab,
+        tabPanel
+      };
     }
 
     /**
      * unbind tablist
      */
     unmount() {
-      this.tablist.tabs.forEach((tab, index) => {
-        const tabPanel = this.tablist.tabPanels[index];
+      this._tablist.tabs.forEach((tab, index) => {
+        const tabPanel = this._tablist.tabPanels[index];
 
         // unsubscribe internal events for tab and tap panel
         tab.removeEventListener('click', this._handleDisplay);
@@ -438,7 +441,7 @@
         tabPanel.setAttribute('aria-hidden', 'false');
       });
 
-      this.tablist = {};
+      this._tablist = {};
     }
   }
 
