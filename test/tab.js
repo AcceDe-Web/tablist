@@ -222,7 +222,7 @@ test( 'Panel navigation', async t => {
     return document.querySelector( '[role="tab"]' ) === document.activeElement;
   });
 
-  t.true( pageUp, 'La combinaison « Ctrl + Page suivante » focus l’onglet précédent' );
+  t.true( pageUp, 'La combinaison « Ctrl + Page précédente » focus l’onglet précédent' );
 
   await page.focus( '[role="tab"]:nth-child(2)' );
   await page.focus( '[aria-hidden="false"] a' );
