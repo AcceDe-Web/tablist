@@ -70,7 +70,7 @@ $ npm install accedeweb-tablist
 and later in your code:
 
 ```js
-var Tablist = require( 'accedeweb-tablist' );
+var Tablist = require( '@accedeweb/tablist' );
 
 // or
 
