@@ -248,7 +248,7 @@ test( 'Panel navigation', async t => {
     return document.querySelector( '[role="tab"]:last-child' ) === document.activeElement;
   });
 
-  t.true( pageUpFirst, 'La combinaison « Ctrl + Page suivante » focus le dernier onglet depuis le premier panneau' );
+  t.true( pageUpFirst, 'La combinaison « Ctrl + Page précédente » focus le dernier onglet depuis le premier panneau' );
 
   await page.focus( '[aria-hidden="false"] a' );
 
