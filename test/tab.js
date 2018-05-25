@@ -18,7 +18,7 @@ test( 'Mount', async t => {
 
   const [ browser, page ] = await createBrowser();
 
-  const [[ firstIndex, ...indexes ], [ firstPanel, ... panels ]] = await page.evaluate(() => {
+  const [[ firstIndex, ...indexes ], [ firstPanel, ... panels ], firstSelected ] = await page.evaluate(() => {
     const tabindexes = Array.from( document.querySelectorAll( '[role="tab"]' )).map( tab => {
       return tab.tabIndex;
     });
@@ -29,11 +29,13 @@ test( 'Mount', async t => {
 
     return [
       tabindexes,
-      hidden
+      hidden,
+      document.querySelector( '[role="tab"]' ).getAttribute( 'aria-selected' ) === 'true'
     ];
   });
 
   t.same( firstIndex, 0, 'Le premier élémnent « tab » a « [tabindex="0"] ».' );
+  t.true( firstSelected, 'Le premier élément « tab » a « [aria-selected="true"] ».' );
   t.same( indexes.join(), '-1,-1,-1', 'Les autres élémnents « tab » ont « [tabindex="-1"] ».' );
 
   t.same( firstPanel, 'false', 'Le premier élémnent « tabpanel » a « [aria-hidden="false"] ».' );
