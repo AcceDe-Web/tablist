@@ -64,17 +64,17 @@ The selector can be anything you want, like a class, as the script allows callba
 The script itself, either from npm:
 
 ```bash
-$ npm install accedeweb-tablist
+$ npm install @accede-web/tablist
 ```
 
 and later in your code:
 
 ```js
-var Tablist = require( '@accedeweb/tablist' );
+var Tablist = require( '@accede-web/tablist' );
 
 // or
 
-import Tablist from accedeweb-tablist;
+import Tablist from @accede-web/tablist
 ```
 
 or downloaded from Github and added to the page (minified and non minified versions available in the `dist` folder)
