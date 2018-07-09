@@ -1,6 +1,6 @@
 /**
  * @accede-web/tablist - WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines
- * @version v1.0.2
+ * @version v2.0.0
  * @link http://a11y.switch.paris/
  * @license ISC
  **/
@@ -262,8 +262,9 @@
     }
 
     /**
-     * Toggle the `aria-expanded` attribute on the tabpanel based on the passed tab
-     * @param {DOMElement} tab - Tab element
+     * Toggle the `aria-hidden` attribute on the tabpanel based on the passed tab
+     * @param {integer} index - index of the tab
+     * @param {boolean} show - whether or not display the panel
      */
     _toggleDisplay(index, show = true) {
       if (show && index === this._tablist.openedIndex) {
@@ -278,7 +279,6 @@
         this._toggleDisplay(this._tablist.openedIndex, false);
       }
 
-      tab.setAttribute('aria-expanded', show);
       tabPanel.setAttribute('aria-hidden', !show);
 
       if (show) {
@@ -336,7 +336,7 @@
         tab.disabled = tab.hasAttribute('disabled') || tab.getAttribute('aria-disabled') === 'true';
 
         // if there's no opened tab yet
-        if (tab.getAttribute('data-expanded') === 'true' && !tab.disabled) {
+        if (tab.getAttribute('data-open') === 'true' && !tab.disabled) {
           if (this._tablist.openedIndex === undefined) {
             this._toggleDisplay(index, true);
 
@@ -345,7 +345,7 @@
         }
 
         // remove setup data attributes
-        tab.removeAttribute('data-expanded');
+        tab.removeAttribute('data-open');
 
         // get first non-disabled tab
         if (firstTabIndex === undefined && !tab.disabled) {
@@ -354,14 +354,13 @@
 
         // set the attributes according the the openedTab status
         tab.setAttribute('tabindex', -1);
-        tab.setAttribute('aria-expanded', openedTab);
         tabPanel.setAttribute('aria-hidden', !openedTab);
 
         // subscribe internal events for tab and tap panel
         tab.addEventListener('click', this._handleDisplay);
         tab.addEventListener('focus', this._handleFocus);
         tab.addEventListener('keydown', this._handleTab);
-        tabPanel.addEventListener('focus', this._handlePanelFocus);
+        tabPanel.addEventListener('focus', this._handlePanelFocus, true);
         tabPanel.addEventListener('keydown', this._handlePanel);
       });
 
@@ -372,12 +371,14 @@
       // set the tabindex so the first opened tab or the first non-disabled tab can be focused on tab navigation
       if (this._tablist.openedIndex !== undefined) {
         this._tablist.tabs[this._tablist.openedIndex].setAttribute('tabindex', 0);
+        this._tablist.tabs[this._tablist.openedIndex].setAttribute('aria-selected', 'true');
       }
       // if there's no opened tab and it's not an accordion open the first tab
       else {
           this._toggleDisplay(firstTabIndex, true);
 
           this._tablist.tabs[firstTabIndex].setAttribute('tabindex', 0);
+          this._tablist.tabs[firstTabIndex].setAttribute('aria-selected', 'true');
         }
     }
 
@@ -434,9 +435,8 @@
 
         tab.removeAttribute('tabindex');
         tab.removeAttribute('aria-selected');
-        tab.removeAttribute('aria-expanded');
 
-        tabPanel.removeEventListener('focus', this._handlePanelFocus);
+        tabPanel.removeEventListener('focus', this._handlePanelFocus, true);
         tabPanel.removeEventListener('keydown', this._handlePanel);
         tabPanel.setAttribute('aria-hidden', 'false');
       });
