@@ -1,425 +1,270 @@
-/* jshint esnext:true, node:true  */
-/* globals require, __dirname */
-
+/* eslint-env node */
 'use strict';
 
-const test        = require( 'tape' );
-const loadBrowser = require( './tools/browser' );
-const path        = 'file://' + __dirname + '/tab.html';
+const test = require( 'tape' );
+const puppeteer = require( 'puppeteer' );
+const path = `file://${__dirname}/tab.html`;
 
+const createBrowser = async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
 
-// Label test suite in output
-test( '-------------------------------', ( t ) => {
-  t.comment( 'Running *Tab* test suite.' );
-  t.comment( '-------------------------------' );
+  await page.goto( path );
+
+  return [ browser, page ];
+};
+
+test( 'Mount', async t => {
+
+  const [ browser, page ] = await createBrowser();
+
+  const [[ firstIndex, ...indexes ], [ firstPanel, ... panels ], firstSelected ] = await page.evaluate(() => {
+    const tabindexes = Array.from( document.querySelectorAll( '[role="tab"]' )).map( tab => {
+      return tab.tabIndex;
+    });
+
+    const hidden = Array.from( document.querySelectorAll( '[role="tabpanel"]' )).map( tabpanel => {
+      return tabpanel.getAttribute( 'aria-hidden' );
+    });
+
+    return [
+      tabindexes,
+      hidden,
+      document.querySelector( '[role="tab"]' ).getAttribute( 'aria-selected' ) === 'true'
+    ];
+  });
+
+  t.same( firstIndex, 0, 'Le premier élémnent « tab » a « [tabindex="0"] ».' );
+  t.true( firstSelected, 'Le premier élément « tab » a « [aria-selected="true"] ».' );
+  t.same( indexes.join(), '-1,-1,-1', 'Les autres élémnents « tab » ont « [tabindex="-1"] ».' );
+
+  t.same( firstPanel, 'false', 'Le premier élémnent « tabpanel » a « [aria-hidden="false"] ».' );
+  t.same( panels.join(), 'true,true,true', 'Les autres élémnents « tabpanel » ont « [aria-hidden="true"] ».' );
+
+  await browser.close();
+
+  t.end();
+});
+
+test( 'Focus', async t => {
+
+  const [ browser, page ] = await createBrowser();
+
+  await page.focus( '[role="tab"]:nth-child(2)' );
+
+  const [ selected, selectedIndex, uniqueIndex, selectedCount, hiddenPanel, hiddenCount ] = await page.evaluate(() => {
+    return [
+      document.activeElement.getAttribute( 'aria-selected' ),
+      document.activeElement.tabIndex,
+      document.querySelectorAll( '[role="tab"][tabindex="0"]' ).length,
+      document.querySelectorAll( '[aria-selected="true"]' ).length,
+      document.getElementById( document.activeElement.getAttribute( 'aria-controls' )).getAttribute( 'aria-hidden' ),
+      document.querySelectorAll( '[role="tabpanel"][aria-hidden="false"]' ).length,
+    ];
+  });
+
+  t.same( selected, 'true', 'L’onglet focus a « [aria-selected="true"] »' );
+  t.same( selectedIndex, 0, 'L’onglet focus a « [tabindex="0"] »' );
+  t.same( uniqueIndex, 1, 'Seul l’onglet focus a « [tabindex="0"] »' );
+  t.same( selectedCount, 1, 'Seul l’onglet focus a « [aria-selected] »' );
+  t.same( hiddenPanel, 'false', 'Le panneau associé à l’onglet focus a « [aria-hidden="false"] »' );
+  t.same( hiddenCount, 1, 'Seul le panneau associé à l’onglet focus a « [aria-hidden="false"] »' );
+
+  await browser.close();
+
+  t.end();
+});
+
+test( 'Click', async t => {
+
+  const [ browser, page ] = await createBrowser();
+
+  await page.click( '[role="tab"]:nth-child(4)' );
+
+  const [ selected, selectedIndex, uniqueIndex, selectedCount, hiddenPanel, hiddenCount ] = await page.evaluate(() => {
+    return [
+      document.activeElement.getAttribute( 'aria-selected' ),
+      document.activeElement.tabIndex,
+      document.querySelectorAll( '[role="tab"][tabindex="0"]' ).length,
+      document.querySelectorAll( '[aria-selected="true"]' ).length,
+      document.getElementById( document.activeElement.getAttribute( 'aria-controls' )).getAttribute( 'aria-hidden' ),
+      document.querySelectorAll( '[role="tabpanel"][aria-hidden="false"]' ).length,
+    ];
+  });
+
+  t.same( selected, 'true', 'L’onglet cliqué a « [aria-selected="true"] »' );
+  t.same( selectedIndex, 0, 'L’onglet cliqué a « [tabindex="0"] »' );
+  t.same( uniqueIndex, 1, 'Seul l’onglet cliqué a « [tabindex="0"] »' );
+  t.same( selectedCount, 1, 'Seul l’onglet cliqué a « [aria-selected] »' );
+  t.same( hiddenPanel, 'false', 'Le panneau associé à l’onglet cliqué a « [aria-hidden="false"] »' );
+  t.same( hiddenCount, 1, 'Seul le panneau associé à l’onglet cliqué a « [aria-hidden="false"] »' );
+
+  await browser.close();
+
+  t.end();
+});
+
+test( 'Tab navigation', async t => {
+
+  const [ browser, page ] = await createBrowser();
+
+  await page.focus( '[role="tab"]' );
+  await page.keyboard.press( 'ArrowRight' );
+
+  const [ focusSecond, current ] = await page.evaluate(() => {
+    const secondTab = document.querySelector( '[role="tab"]:nth-child(2)' );
+    const secondTabPanel = document.querySelector( '[role="tabpanel"]:nth-of-type(2)' );
+
+    return [
+      document.activeElement === secondTab,
+      secondTab === window.tablist.current.tab && secondTabPanel === window.tablist.current.tabPanel
+    ];
+  });
+
+  t.true( focusSecond, 'La touche « Flèche droite » focus l’onglet suivant' );
+
+  await page.keyboard.press( 'ArrowLeft' );
+
+  const focusFirst = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]' );
+  });
+
+  t.true( focusFirst, 'La touche « Flèche gauche » focus l’onglet précédent' );
+
+  await page.keyboard.press( 'ArrowLeft' );
+
+  const focusLast = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]:nth-child(4)' );
+  });
+
+  t.true( focusLast, 'La touche « Flèche gauche » focus le dernier onglet' );
+
+  await page.keyboard.press( 'ArrowRight' );
+
+  const focusRighFirst = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]' );
+  });
+
+  t.true( focusRighFirst, 'La touche « Flèche droite » focus le premier onglet' );
+
+  await page.keyboard.press( 'ArrowRight' );
+  await page.keyboard.press( 'ArrowRight' );
+
+  const focusSkipDisabled = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]:nth-child(4)' );
+  });
+
+  t.true( focusSkipDisabled, 'La navigation saute les onglets « [disabled] »' );
+
+  await page.keyboard.press( 'ArrowDown' );
+
+  const focusDown = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]' );
+  });
+
+  t.true( focusDown, 'La touche « Flèche bas » focus le premier onglet' );
+
+  await page.keyboard.press( 'ArrowDown' );
+  await page.keyboard.press( 'ArrowUp' );
+
+  const focusUp = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]' );
+  });
+
+  t.true( focusUp, 'La touche « Flèche haut » focus l’onglet précédent' );
+
+  await page.keyboard.press( 'End' );
+
+  const focusEnd = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]:last-child' );
+  });
+
+  t.true( focusEnd, 'La touche « Fin » focus le dernier onglet' );
+
+  await page.keyboard.press( 'Home' );
+
+  const focusHome = await page.evaluate(() => {
+    return document.activeElement === document.querySelector( '[role="tab"]' );
+  });
+
+  t.true( focusHome, 'La touche « Début » focus le premier onglet' );
+
+  t.true( current, 'La propriété « current » de tablist reflète les bons tab et tabPanel' );
+
+  await browser.close();
+
   t.end();
 });
 
 
-// test 1
-test( '1| L’onglet ayant le focus est le seul à avoir la valeur « true » pour l’attribut « aria-selected ».', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '[role="tab"]' )
-    .evaluate(() => {
-      return {
-        ariaSelected: document.activeElement.getAttribute( 'aria-selected' ),
-        selectedItems: document.querySelectorAll( '[aria-selected="true"]' ).length
-      };
-    })
-    .end() // close browser
-    .then(( actual ) => {
-      t.equal( actual.ariaSelected, 'true', '« aria-selected » doit valoir « true ».' );
-      t.equal( actual.selectedItems, 1, '« 1 » seul élément doit avoir un « aria-selected » à « true ».' );
-      t.end();
-    });
-});
+test( 'Panel navigation', async t => {
 
+  const [ browser, page ] = await createBrowser();
 
-// test 2
-test( '2| L’onglet ayant le focus est le seul à avoir la valeur « 0 » pour l’attribut « tabindex ».', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab2' )
-    .evaluate(() => {
-      return {
-        tabindex: document.activeElement.getAttribute( 'tabindex' ),
-        tabindexedItems: document.querySelectorAll( '[role="tab"][tabindex="0"]' ).length
-      };
-    })
-    .end() // close browser
-    .then(( actual ) => {
-      t.equal( actual.tabindex, '0', '« tabindex » doit valoir « 0 ».' );
-      t.equal( actual.tabindexedItems, 1, '« 1 » seul élément doit avoir un « tabindex » à « 0 ».' );
-      t.end();
-    });
-});
+  await page.focus( '[role="tab"]:nth-child(2)' );
+  await page.focus( '[aria-hidden="false"] a' );
 
+  await page.keyboard.down( 'Control' );
+  await page.keyboard.press( 'ArrowUp' );
+  await page.keyboard.up( 'Control' );
 
-// test 3
-test( '3| Le panneau associé à l’onglet ayant le focus est le seul à avoir la valeur « false » pour l’attribut « aria-hidden ».', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '#tab2' )
-    .evaluate(() => {
+  const crtlUp = await page.evaluate(() => {
+    return document.querySelector( '[role="tab"]:nth-child(2)' ) === document.activeElement;
+  });
 
-      var panels   = document.querySelectorAll( '[role="tabpanel"]' ),
-          selected = [],
-          i        = 0,
-          iLen     = panels.length;
+  t.true( crtlUp, 'La combinaison « Ctrl + Flèche haut » focus l’onglet lié au panneau' );
 
-      for(; i < iLen; i++ ) {
-        if ( panels[ i ].getAttribute( 'aria-hidden' ) === 'false' ) {
-          selected.push( panels[ i ] );
-        }
-      }
+  await page.focus( '[aria-hidden="false"] a' );
 
-      return selected.length === 1 && selected[ 0 ].id === 'tabpanel2';
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'Seul un panneau doit avoir l’attribut « aria-hidden » qui vaut « false ».' );
-      t.end();
-    });
-});
+  await page.keyboard.down( 'Control' );
+  await page.keyboard.press( 'PageUp' );
+  await page.keyboard.up( 'Control' );
 
+  const pageUp = await page.evaluate(() => {
+    return document.querySelector( '[role="tab"]' ) === document.activeElement;
+  });
 
-// test 4
-test( '4| Les onglets n’ayant pas le focus ont la valeur « false » pour l’attribut « aria-selected ».', ( t ) => {
-  loadBrowser( path ) // open browser
-    .evaluate(() => {
-      return {
-        actual: document.querySelectorAll( '[aria-selected="false"]' ).length,
-        expected: document.querySelectorAll( '[role="tab"]' ).length
-      };
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results.actual, results.expected, 'Aucune onglet n’a le focus au chargement. On doit donc retrouver tous les entêtes non sélectionnés.' );
-      t.end();
-    });
-});
+  t.true( pageUp, 'La combinaison « Ctrl + Page précédente » focus l’onglet précédent' );
 
+  await page.focus( '[role="tab"]:nth-child(2)' );
+  await page.focus( '[aria-hidden="false"] a' );
 
-// test 5
-test( '5| Les onglets n’ayant pas le focus ont la valeur « -1 » pour l’attribut « tabindex ».', ( t ) => {
-  loadBrowser( path ) // open browser
-    .evaluate(() => {
-      return {
-        first: document.querySelector( '[role="tab"]' ).getAttribute( 'tabindex' ) === '0',
-        others: document.querySelectorAll( '[role="tab"][tabindex="-1"]' ).length
-      };
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results.first, true, 'Seul le premier onglet est focusable (« tabindex » à « 0 »).' );
-      t.equal( results.others, 3, 'Tous les autres onglets ne sont pas focusables (« tabindex » à « -1 »)' );
-      t.end();
-    });
-});
+  await page.keyboard.down( 'Control' );
+  await page.keyboard.press( 'PageDown' );
+  await page.keyboard.up( 'Control' );
 
+  const pageDown = await page.evaluate(() => {
+    return document.querySelector( '[role="tab"]:last-child' ) === document.activeElement;
+  });
 
-// test 6
-test( '6| Un « Click » sur un onglet dont la valeur l’attribut « aria-expanded » est à « false » modifie la valeur de cet attribut en la passant à « true ». La valeur de l’attribut « aria-hidden » du panneau associé à l’entête passe de la valeur « true » à « false ».', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '#tab2' )
-    .evaluate(() => {
-      var tab = document.getElementById( 'tab2' );
+  t.true( pageDown, 'La combinaison « Ctrl + Page suivante » focus l’onglet suivant' );
 
-      return {
-        ariaExpanded: tab.getAttribute( 'aria-expanded' ),
-        ariaHidden: document.querySelector( '#tabpanel2' ).getAttribute( 'aria-hidden' )
-      };
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results.ariaExpanded, 'true', 'L’élément doit être actif.' );
-      t.equal( results.ariaHidden, 'false', 'L’élément doit être affiché.' );
-      t.end();
-    });
-});
+  await page.focus( '[role="tab"]' );
+  await page.focus( '[aria-hidden="false"] a' );
 
+  await page.keyboard.down( 'Control' );
+  await page.keyboard.press( 'PageUp' );
+  await page.keyboard.up( 'Control' );
 
-// test 7
-test( '7| Les panneaux associés aux onglets n’ayant pas le focus ont la valeur « true » pour l’attribut « aria-hidden »', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '#tab2' )
-    .evaluate(() => {
+  const pageUpFirst = await page.evaluate(() => {
+    return document.querySelector( '[role="tab"]:last-child' ) === document.activeElement;
+  });
 
-      var panels   = document.querySelectorAll( '[role="tabpanel"]' ),
-          selected = [],
-          i        = 0,
-          iLen     = panels.length;
+  t.true( pageUpFirst, 'La combinaison « Ctrl + Page précédente » focus le dernier onglet depuis le premier panneau' );
 
-      for(; i < iLen; i++ ) {
-        if ( panels[ i ].getAttribute( 'aria-hidden' ) === 'true' ) {
-          selected.push( panels[ i ] );
-        }
-      }
+  await page.focus( '[aria-hidden="false"] a' );
 
-      return selected.length === 3;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'Tous les panneaux sauf 1 doivent avoir l’attribut « aria-hidden » qui vaut « true ».' );
-      t.end();
-    });
-});
+  await page.keyboard.down( 'Control' );
+  await page.keyboard.press( 'PageDown' );
+  await page.keyboard.up( 'Control' );
 
+  const pageDownFirst = await page.evaluate(() => {
+    return document.querySelector( '[role="tab"]' ) === document.activeElement;
+  });
 
+  t.true( pageDownFirst, 'La combinaison « Ctrl + Page suivante » focus le premier onglet depuis le dernier panneau' );
 
+  await browser.close();
 
-// test 8
-test( '8| Une pression sur la touche « Flèche haut » lorsque le focus est positionné sur le premier onglet déplace le focus sur le dernier onglet.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab1' )
-    .key( 38 ) // `ArrowUp` key
-    .evaluate(() => {
-      return document.querySelector( '#tab4' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le dernier élément.' );
-      t.end();
-    });
-});
-
-
-// test 9
-test( '9| Une pression sur la touche « Flèche haut » lorsque le focus est positionné sur un onglet déplace le focus sur l’onglet précédent.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab2' )
-    .key( 38 ) // `ArrowUp` key
-    .evaluate(() => {
-      return document.querySelector( '[role="tab"]' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier élément.' );
-      t.end();
-    });
-});
-
-
-// test 10
-test( '10| Une pression sur la touche « Flèche gauche » lorsque le focus est positionné sur le premier onglet déplace le focus sur le dernier onglet.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab1' )
-    .key( 37 ) // `ArrowLeft` key
-    .evaluate(() => {
-      return document.querySelector( '#tab4' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le dernier élément.' );
-      t.end();
-    });
-});
-
-
-// test 11
-test( '11| Une pression sur la touche « Flèche gauche » lorsque le focus est positionné sur un onglet déplace le focus sur l’onglet précédent.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab2' )
-    .key( 37 ) // `ArrowLeft` key
-    .evaluate(() => {
-      return document.querySelector( '[role="tab"]' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier élément.' );
-      t.end();
-    });
-});
-
-
-// test 12
-test( '12| Une pression sur la touche « Flèche bas » lorsque le focus est positionné sur le dernier onglet déplace le focus sur le premier onglet.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab4' )
-    .key( 40 ) // `ArrowDown` key
-    .evaluate(() => {
-      return document.querySelector( '[role="tab"]' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier élément.' );
-      t.end();
-    });
-});
-
-
-// test 13
-test( '13| Une pression sur la touche « Flèche bas» lorsque le focus est positionné sur un onglet déplace le focus sur l’onglet suivant.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '[role="tab"]' )
-    .key( 40 ) // `ArrowDown` key
-    .evaluate(() => {
-      return document.querySelector( '#tab2' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le second élément.' );
-      t.end();
-    });
-});
-
-
-// test 14
-test( '14| Une pression sur la touche « Flèche droite » lorsque le focus est positionné sur le dernier onglet déplace le focus sur le premier onglet.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab4' )
-    .key( 39 ) // `ArrowRight` key
-    .evaluate(() => {
-      return document.querySelector( '[role="tab"]' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier élément.' );
-      t.end();
-    });
-});
-
-
-// test 15
-test( '15| Une pression sur la touche « Flèche droite» lorsque le focus est positionné sur un onglet déplace le focus sur l’onglet suivant.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '[role="tab"]' )
-    .key( 39 ) // `ArrowRight` key
-    .evaluate(() => {
-      return document.querySelector( '#tab2' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le second élément.' );
-      t.end();
-    });
-});
-
-
-// test 16
-test( '16| Une pression sur la combinaison de touches « Ctrl+Flèche haut » lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’onglet de ce panneau.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '[role="tab"]' ) // open tab first
-    .focus( '[role="tabpanel"] a' )
-    .key({
-      code: 38, // `ArrowUp` key
-      ctrl: true
-    })
-    .evaluate(() => {
-      return document.querySelector( '[role="tab"]' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier onglet.' );
-      t.end();
-    });
-});
-
-
-// test 17
-test( '17| Une pression sur la combinaison de touches « Ctrl+Page précédente » lorsque le focus est positionné sur un élément du premier panneau déplace le focus sur le dernier onglet.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '[role="tab"]' ) // open tab first
-    .focus( '[role="tabpanel"] a' )
-    .key({
-      code: 33, // `PageUp` key
-      ctrl: true
-    })
-    .evaluate(() => {
-      return document.querySelector( '#tab4' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le dernier onglet.' );
-      t.end();
-    });
-});
-
-
-// test 18
-test( '18| Une pression sur la combinaison de touches « Ctrl+Page précédente » lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’onglet précédent.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '#tab2' ) // open tab first
-    .focus( '#tabpanel2 a' )
-    .key({
-      code: 33, // `PageUp` key
-      ctrl: true
-    })
-    .evaluate(() => {
-      return document.querySelector( '#tab1' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier onglet.' );
-      t.end();
-    });
-});
-
-
-// test 19
-test( '19| Une pression sur la combinaison de touches « Ctrl+Page suivante» lorsque le focus est positionné sur un élément du dernier panneau déplace le focus sur le premier onglet.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '#tab4' ) // open tab first
-    .focus( '#tabpanel4 a' )
-    .key({
-      code: 34, // `PageDown` key
-      ctrl: true
-    })
-    .evaluate(() => {
-      return document.querySelector( '#tab1' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le premier onglet.' );
-      t.end();
-    });
-});
-
-
-// test 20
-test( '20| Une pression sur la combinaison de touches « Ctrl+Page suivante» lorsque le focus est positionné sur un élément d’un panneau déplace le focus sur l’onglet suivant.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '[role="tab"]' ) // open tab first
-    .focus( '[role="tabpanel"] a' )
-    .key({
-      code: 34, // `PageDown` key
-      ctrl: true
-    })
-    .evaluate(() => {
-      return document.querySelector( '#tab2' ) === document.activeElement;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, true, 'L’élément actif doit être le second onglet.' );
-      t.end();
-    });
-});
-
-
-// test 21
-test( '21| A l’ouverture d’un panneau, la fonction de callback correspondante doit être appelée.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .click( '#tab2' ) // open panel
-    .evaluate(() => {
-      return document.querySelector( '#tab2' ).dataset.openCB;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, 'true', 'La fonction de callback doit être exécutée.' );
-      t.end();
-    });
-});
-
-
-// test 22
-test( '22| A la fermeture d’un panneau, la fonction de callback correspondante doit être appelée.', ( t ) => {
-  loadBrowser( path ) // open browser
-    .focus( '#tab2' )
-    .click( '#tab2' ) // open panel
-    .evaluate(() => {
-      return document.querySelector( '#tab1' ).dataset.closeCB;
-    })
-    .end() // close browser
-    .then(( results ) => {
-      t.equal( results, 'true', 'La fonction de callback doit être exécutée.' );
-      t.end();
-    });
+  t.end();
 });
