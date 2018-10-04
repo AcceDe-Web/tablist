@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Onglet - Composants d’interface riche accessibles</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="format-detection" content="telephone=no">
+    <script src="js/modernizr.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+  </head>
+  <body class="tab">
+    <div hidden aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg">
+  <symbol viewBox="0 0 84 12" id="icon-afterTitle">
+    <path d="M42 0c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 9c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3zM8 2.25C5.932 2.25 4.25 3.932 4.25 6c0 2.067 1.682 3.75 3.75 3.75S11.75 8.067 11.75 6c0-2.068-1.682-3.75-3.75-3.75zm0 7C6.208 9.25 4.75 7.792 4.75 6S6.208 2.75 8 2.75 11.25 4.208 11.25 6 9.792 9.25 8 9.25zm16-7c-2.068 0-3.75 1.682-3.75 3.75 0 2.067 1.682 3.75 3.75 3.75S27.75 8.067 27.75 6c0-2.068-1.682-3.75-3.75-3.75zm0 7c-1.792 0-3.25-1.458-3.25-3.25S22.208 2.75 24 2.75 27.25 4.208 27.25 6 25.792 9.25 24 9.25zm36-7c-2.067 0-3.75 1.682-3.75 3.75 0 2.067 1.683 3.75 3.75 3.75S63.75 8.067 63.75 6c0-2.068-1.683-3.75-3.75-3.75zm0 7c-1.792 0-3.25-1.458-3.25-3.25S58.208 2.75 60 2.75 63.25 4.208 63.25 6 61.792 9.25 60 9.25zm16-7c-2.067 0-3.75 1.682-3.75 3.75 0 2.067 1.683 3.75 3.75 3.75S79.75 8.067 79.75 6c0-2.068-1.683-3.75-3.75-3.75zm0 7c-1.792 0-3.25-1.458-3.25-3.25S74.208 2.75 76 2.75 79.25 4.208 79.25 6 77.792 9.25 76 9.25z"
+    />
+  </symbol>
+  <symbol viewBox="0 0 52 12" id="icon-beforeTitle">
+    <path d="M40 0c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 9c-1.654 0-3-1.346-3-3s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3zM6 2.25C3.932 2.25 2.25 3.932 2.25 6c0 2.066 1.682 3.75 3.75 3.75S9.75 8.066 9.75 6c0-2.068-1.682-3.75-3.75-3.75zm0 7C4.208 9.25 2.75 7.792 2.75 6S4.208 2.75 6 2.75 9.25 4.208 9.25 6 7.792 9.25 6 9.25zm16-7c-2.068 0-3.75 1.682-3.75 3.75 0 2.066 1.682 3.75 3.75 3.75S25.75 8.066 25.75 6c0-2.068-1.682-3.75-3.75-3.75zm0 7c-1.792 0-3.25-1.458-3.25-3.25S20.208 2.75 22 2.75 25.25 4.208 25.25 6 23.792 9.25 22 9.25z"
+    />
+  </symbol>
+  <symbol viewBox="0 0 16 12" id="icon-bigDot">
+    <path d="M8 0C4.69 0 2 2.69 2 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 9C6.346 9 5 7.654 5 6s1.346-3 3-3 3 1.346 3 3-1.346 3-3 3z" />
+  </symbol>
+  <symbol viewBox="0 0 16 12" id="icon-dot">
+    <path d="M8 2.25C5.932 2.25 4.25 3.932 4.25 6c0 2.066 1.682 3.75 3.75 3.75S11.75 8.066 11.75 6c0-2.068-1.682-3.75-3.75-3.75zm0 7C6.208 9.25 4.75 7.792 4.75 6S6.208 2.75 8 2.75 11.25 4.208 11.25 6 9.792 9.25 8 9.25z" />
+  </symbol>
+  <symbol viewBox="0 0 27 32" id="icon-logo">
+    <path fill="#C23218" d="M13.5 5.626c-2.08 0-3.768 1.687-3.768 3.768s1.687 3.768 3.768 3.768 3.768-1.687 3.768-3.768S15.58 5.626 13.5 5.626zm0 5.65c-1.04 0-1.884-.843-1.884-1.883S12.46 7.51 13.5 7.51s1.884.844 1.884 1.884-.843 1.883-1.884 1.883zM12.56 18.813h1.883v7.535H12.56z"
+    />
+    <path d="M4.27 14.42c.164-.372.26-.82.288-1.342s.077-1.102.077-1.762V4.723c0-1.32.13-1.974.46-2.66S6.884.942 7.848.942V0c-.8 0-1.913.095-2.49.232C4.78.37 4.29.618 3.893.976c-.4.357-.688.886-.867 1.588-.18.7-.27 1.603-.27 2.702v6.602c0 1.1-.158 2-.474 2.703-.316.702-1.173 1.223-1.97 1.443.797.22 1.653.74 1.97 1.442s.475 1.602.475 2.702v6.603c0 1.1.09 2 .27 2.702.178.7.466 1.23.865 1.59.398.356.888.603 1.465.742.58.138 1.693.206 2.49.206v-.94c-.962 0-2.424-.38-2.754-1.067s-.46-1.343-.46-2.663v-6.593c0-.66-.05-1.24-.076-1.762s-.124-.97-.29-1.342c-.164-.37-.432-.694-.804-.97-.37-.275-.995-.473-1.655-.638.66-.165 1.283-.362 1.654-.637.372-.274.64-.598.805-.97zM22.73 17.58c-.164.373-.26.82-.288 1.343-.026.52-.077 1.1-.077 1.76v6.595c0 1.32-.13 1.974-.46 2.662s-1.79 1.118-2.754 1.118V32c.8 0 1.914-.095 2.49-.232.58-.138 1.068-.385 1.466-.742.4-.358.688-.887.867-1.59.18-.7.268-1.602.268-2.702v-6.6c0-1.102.16-2.003.476-2.704.316-.7 1.174-1.223 1.97-1.442-.796-.22-1.653-.74-1.97-1.442s-.475-1.603-.475-2.702V5.24c0-1.1-.088-2-.267-2.702-.18-.702-.468-1.23-.867-1.59C22.71.593 22.22.345 21.64.207 21.065.068 19.95 0 19.15 0v.942c.965 0 2.426.38 2.756 1.066s.46 1.342.46 2.662v6.593c0 .66.05 1.24.076 1.762.028.522.124.97.29 1.34s.433.696.804.97c.37.276.994.474 1.655.64-.66.164-1.283.36-1.654.637s-.64.598-.805.97z"
+    />
+  </symbol>
+  <symbol viewBox="0 0 24 24" id="icon-tabClosed">
+    <path d="M7 11.5h10v1H7z" />
+  </symbol>
+  <symbol viewBox="0 0 24 24" id="icon-tabOpened">
+    <path d="M11.5 7h1v10h-1z" />
+  </symbol>
+</svg>
+
+    </div>
+    <div role="banner">
+      <ul>
+        <li><a href="/" class="banner-home">
+            <svg aria-hidden="true" class="icon-logo">
+              <use xlink:href="#icon-logo"></use>
+            </svg><span>Retour à la page principale</span></a></li>
+      </ul>
+    </div>
+    <main role="main">
+      <header class="header-page">
+        <div class="title-zone">
+          <h1 class="title-page">Onglet</h1>
+          <svg aria-hidden="true" class="icon-page-title">
+            <use xlink:href="#icon-afterTitle"></use>
+          </svg>
+          <p class="desc-page">Composant permettant d’optimiser l’affichage du contenu d’une page dans un espace réduit grâce à un système d’étiquettes.</p>
+        </div>
+        <div class="intro-banner">
+          <div class="intro-action"><a href="http://www.accede-web.com/notices/interface-riche/onglets/" class="button-link">Parcourir la notice</a><a href="https://github.com/Switch-Company/accedeweb-tablist" class="button-link">Découvrir sur Github</a>
+          </div>
+        </div>
+      </header>
+      <section class="block">
+        <h2 class="title-block">
+          <svg aria-hidden="true" class="icon-title">
+            <use xlink:href="#icon-beforeTitle"></use>
+          </svg><span>Démonstration</span>
+        </h2>
+        <ul role="tablist">
+          <li id="tab1" role="tab" aria-controls="tabpanel1">Onglet n<sup>o</sup> 1</li>
+          <li id="tab2" role="tab" aria-controls="tabpanel2" data-open="true">Onglet n<sup>o</sup> 2</li>
+          <li id="tab3" role="tab" aria-controls="tabpanel3" disabled="disabled">Onglet désactivé</li>
+          <li id="tab4" role="tab" aria-controls="tabpanel4">Onglet n<sup>o</sup> 4</li>
+        </ul>
+        <div id="tabpanel1" role="tabpanel" aria-hidden="false">
+          <p>Le saviez-vous ? Le motif de conception « onglet » est très similaire à celui des « accordéons ». Ils partagent en effet les mêmes rôles ARIA : <em lang="en">tablist</em>, <em lang="en">tab</em> et <em lang="en">tabpanel</em>. Ils se démarquent principalement par les raccourcis clavier utilisables. N’hésitez pas à aller voir la <a href="http://www.accede-web.com/notices/interface-riche/accordeons/">notice d’accessibilité des accordéons</a> ainsi que la page de <a href="/accordion.html">démonstration du composant « accordéons »</a>.</p>
+        </div>
+        <div id="tabpanel2" role="tabpanel" aria-hidden="false">
+          <p>Lorem ipsum tab 2 <a href="#">link</a></p>
+        </div>
+        <div id="tabpanel3" role="tabpanel" aria-hidden="false">
+          <p>Lorem ipsum tab 3 <a href="#">link</a></p>
+        </div>
+        <div id="tabpanel4" role="tabpanel" aria-hidden="false">
+          <p>Lorem ipsum tab 4 <a href="#">link</a></p>
+        </div>
+      </section>
+    </main>
+    <footer role="contentinfo"></footer>
+    <script src="../dist/tablist.js"></script>
+    <script>
+      function close( tab, tabPanel ) {
+        tab.dataset.closeCB = true;
+      }
+
+      function open( tab, tabPanel ) {
+        tab.dataset.openCB = true;
+      }
+
+      var list = document.querySelector( '[role=tablist]' );
+      window.tablist = new window.Tablist( list );
+
+      tablist.on( 'show', open );
+      tablist.on( 'hide', close );
+
+      tablist.mount();
+    </script>
+  </body>
+</html>
