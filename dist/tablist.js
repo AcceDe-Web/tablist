@@ -307,7 +307,6 @@
      */
     mount() {
       let firstTabIndex;
-      let openedTab = false;
 
       // create reference arrays
       this._tablist.tabs = [];
@@ -317,6 +316,7 @@
       Array.prototype.slice.call(this.el.querySelectorAll('[role=tab]')).forEach((tab, index) => {
         const controls = tab.getAttribute('aria-controls');
         let tabPanel;
+        let openedTab = false;
 
         // get the tabpanel linked to the tab element
         if (controls) {

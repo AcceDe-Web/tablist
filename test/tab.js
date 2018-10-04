@@ -3,13 +3,16 @@
 
 const test = require( 'tape' );
 const puppeteer = require( 'puppeteer' );
-const path = `file://${__dirname}/tab.html`;
+const path = {
+  default: `file://${__dirname}/tab.html`,
+  opened: `file://${__dirname}/tab-opened.html`
+};
 
-const createBrowser = async () => {
+const createBrowser = async ( type = 'default' ) => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  await page.goto( path );
+  await page.goto( path[ type ]);
 
   return [ browser, page ];
 };
@@ -40,6 +43,39 @@ test( 'Mount', async t => {
 
   t.same( firstPanel, 'false', 'Le premier élémnent « tabpanel » a « [aria-hidden="false"] ».' );
   t.same( panels.join(), 'true,true,true', 'Les autres élémnents « tabpanel » ont « [aria-hidden="true"] ».' );
+
+  await browser.close();
+
+  t.end();
+});
+
+
+test( 'Second tab opened by default', async t => {
+
+  const [ browser, page ] = await createBrowser( 'opened' );
+
+  const [ indexes, panels, secondSelected ] = await page.evaluate(() => {
+    const tabindexes = Array.from( document.querySelectorAll( '[role="tab"]' )).map( tab => {
+      return tab.tabIndex;
+    });
+
+    const hidden = Array.from( document.querySelectorAll( '[role="tabpanel"]' )).map( tabpanel => {
+      return tabpanel.getAttribute( 'aria-hidden' );
+    });
+
+    return [
+      tabindexes,
+      hidden,
+      document.querySelector( '[role="tab"]:nth-child(2)' ).getAttribute( 'aria-selected' ) === 'true'
+    ];
+  });
+
+  t.same( indexes[ 1 ], 0, 'Le deuxième élément « tab » a « [tabindex="0"] ».' );
+  t.true( secondSelected, 'Le deuxième élément « tab » a « [aria-selected="true"] ».' );
+  t.same( indexes.join(), '-1,0,-1,-1', 'Les autres éléments « tab » ont « [tabindex="-1"] ».' );
+
+  t.same( panels[ 1 ], 'false', 'Le deuxième élément « tabpanel » a « [aria-hidden="false"] ».' );
+  t.same( panels.join(), 'true,false,true,true', 'Les autres éléments « tabpanel » ont « [aria-hidden="true"] ».' );
 
   await browser.close();
 
