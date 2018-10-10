@@ -1,6 +1,6 @@
 /**
  * @accede-web/tablist - WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines
- * @version v2.0.0
+ * @version v2.0.1
  * @link http://a11y.switch.paris/
  * @license ISC
  **/
