@@ -34,7 +34,7 @@ Basic HTML structure with roles `tablist`, `tab`, and `tabpanel`.
 
 An `aria-disabled` attribute set to `true` on a `tab` will disable the `tab` and the associated `tabpanel` making them unfocusable and unselectable.
 
-If you wish to open one specific tab when the script starts, just add the `data-open` attribute with the value of `true` on the desired `tab`:
+If you wish to open one specific tab when the script starts, just add the `data-open` attribute on the desired `tab` (without any value or with every other value than `"false"`, it will be considered as `true`):
 
 ```html
 <ul role="tablist">
