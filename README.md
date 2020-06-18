@@ -49,10 +49,10 @@ If you wish to open one specific tab when the script starts, just add the `data-
 
 ### CSS
 
-At least a <abbr title="Cascading Style Sheets">CSS</abbr> selector for panels to be hidden when not selected:
+At least a <abbr title="Cascading Style Sheets">CSS</abbr> selector for panels to be hidden when not selected for [legacy browsers](https://caniuse.com/#feat=hidden) compatibility (Internet Explorer < 11>):
 
 ```css
-[role=tabpanel][aria-hidden=true] {
+[role=tabpanel][hidden] {
   display: none;
 }
 ```
@@ -92,7 +92,7 @@ Now to kick off the script:
 var list = document.querySelector( '[role="tablist"]' );
 
 // create the tablist instance
-var tablist = new window.Tablist( list );
+var tablist = new Tablist( list );
 
 // optionnaly add callbacks to on show and hide a tab
 tablist.on( 'show', function( tab, tabPanel ){
@@ -119,7 +119,7 @@ As the script takes only one `tablist` element as parameter you have to loop ove
 var lists = document.querySelectorAll( '[role="tablist"]' );
 
 Array.prototype.forEach.call( lists, function( list ) {
-  new window.Tablist( list ).mount();
+  new Tablist( list ).mount();
 });
 ```
 
@@ -134,7 +134,7 @@ The `Tablist` constructor returns 4 methods:
 
 ## Properties
 
-To know which `tab` and `tabPanel` is open use `tablist.current`. It will return an array containing `tab` and `tabPanel`
+To know which `tab` and `tabPanel` is open use `tablist.current`. It will return an object containing `tab` and `tabPanel`
 
 ```js
 // ES6 destructuring array

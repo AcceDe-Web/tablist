@@ -27,7 +27,7 @@ test( 'Mount', async t => {
     });
 
     const hidden = Array.from( document.querySelectorAll( '[role="tabpanel"]' )).map( tabpanel => {
-      return tabpanel.getAttribute( 'aria-hidden' );
+      return tabpanel.hasAttribute( 'hidden' );
     });
 
     return [
@@ -41,8 +41,8 @@ test( 'Mount', async t => {
   t.true( firstSelected, 'Le premier élément « tab » a « [aria-selected="true"] ».' );
   t.same( indexes.join(), '-1,-1,-1', 'Les autres élémnents « tab » ont « [tabindex="-1"] ».' );
 
-  t.same( firstPanel, 'false', 'Le premier élémnent « tabpanel » a « [aria-hidden="false"] ».' );
-  t.same( panels.join(), 'true,true,true', 'Les autres élémnents « tabpanel » ont « [aria-hidden="true"] ».' );
+  t.false( firstPanel, 'Le premier élémnent « tabpanel » n’a pas l’attribut « hidden ».' );
+  t.same( panels.join(), 'true,true,true', 'Les autres élémnents « tabpanel » ont l’attribut « hidden ».' );
 
   await browser.close();
 
@@ -60,7 +60,7 @@ test( 'Second tab opened by default', async t => {
     });
 
     const hidden = Array.from( document.querySelectorAll( '[role="tabpanel"]' )).map( tabpanel => {
-      return tabpanel.getAttribute( 'aria-hidden' );
+      return tabpanel.hasAttribute( 'hidden' );
     });
 
     return [
@@ -74,8 +74,8 @@ test( 'Second tab opened by default', async t => {
   t.true( secondSelected, 'Le deuxième élément « tab » a « [aria-selected="true"] ».' );
   t.same( indexes.join(), '-1,0,-1,-1', 'Les autres éléments « tab » ont « [tabindex="-1"] ».' );
 
-  t.same( panels[ 1 ], 'false', 'Le deuxième élément « tabpanel » a « [aria-hidden="false"] ».' );
-  t.same( panels.join(), 'true,false,true,true', 'Les autres éléments « tabpanel » ont « [aria-hidden="true"] ».' );
+  t.false( panels[ 1 ], 'Le deuxième élément « tabpanel » a n’a pas l’attribut « hidden ».' );
+  t.same( panels.join(), 'true,false,true,true', 'Les autres éléments « tabpanel » ont l’attribut « hidden ».' );
 
   await browser.close();
 
@@ -94,8 +94,8 @@ test( 'Focus', async t => {
       document.activeElement.tabIndex,
       document.querySelectorAll( '[role="tab"][tabindex="0"]' ).length,
       document.querySelectorAll( '[aria-selected="true"]' ).length,
-      document.getElementById( document.activeElement.getAttribute( 'aria-controls' )).getAttribute( 'aria-hidden' ),
-      document.querySelectorAll( '[role="tabpanel"][aria-hidden="false"]' ).length,
+      document.getElementById( document.activeElement.getAttribute( 'aria-controls' )).hasAttribute( 'hidden' ),
+      document.querySelectorAll( '[role="tabpanel"]:not([hidden])' ).length,
     ];
   });
 
@@ -103,8 +103,8 @@ test( 'Focus', async t => {
   t.same( selectedIndex, 0, 'L’onglet focus a « [tabindex="0"] »' );
   t.same( uniqueIndex, 1, 'Seul l’onglet focus a « [tabindex="0"] »' );
   t.same( selectedCount, 1, 'Seul l’onglet focus a « [aria-selected] »' );
-  t.same( hiddenPanel, 'false', 'Le panneau associé à l’onglet focus a « [aria-hidden="false"] »' );
-  t.same( hiddenCount, 1, 'Seul le panneau associé à l’onglet focus a « [aria-hidden="false"] »' );
+  t.false( hiddenPanel, 'Le panneau associé à l’onglet focus n’a pas l’attribut « hidden »' );
+  t.same( hiddenCount, 1, 'Seul le panneau associé à l’onglet focus n’a pas l’attribut « hidden »' );
 
   await browser.close();
 
@@ -123,8 +123,8 @@ test( 'Click', async t => {
       document.activeElement.tabIndex,
       document.querySelectorAll( '[role="tab"][tabindex="0"]' ).length,
       document.querySelectorAll( '[aria-selected="true"]' ).length,
-      document.getElementById( document.activeElement.getAttribute( 'aria-controls' )).getAttribute( 'aria-hidden' ),
-      document.querySelectorAll( '[role="tabpanel"][aria-hidden="false"]' ).length,
+      document.getElementById( document.activeElement.getAttribute( 'aria-controls' )).hasAttribute( 'hidden' ),
+      document.querySelectorAll( '[role="tabpanel"]:not([hidden])' ).length,
     ];
   });
 
@@ -132,8 +132,8 @@ test( 'Click', async t => {
   t.same( selectedIndex, 0, 'L’onglet cliqué a « [tabindex="0"] »' );
   t.same( uniqueIndex, 1, 'Seul l’onglet cliqué a « [tabindex="0"] »' );
   t.same( selectedCount, 1, 'Seul l’onglet cliqué a « [aria-selected] »' );
-  t.same( hiddenPanel, 'false', 'Le panneau associé à l’onglet cliqué a « [aria-hidden="false"] »' );
-  t.same( hiddenCount, 1, 'Seul le panneau associé à l’onglet cliqué a « [aria-hidden="false"] »' );
+  t.false( hiddenPanel, 'Le panneau associé à l’onglet cliqué n’a pas l’attribut « hidden »' );
+  t.same( hiddenCount, 1, 'Seul le panneau associé à l’onglet cliqué n’a pas l’attribut « hidden »' );
 
   await browser.close();
 
@@ -238,7 +238,7 @@ test( 'Panel navigation', async t => {
   const [ browser, page ] = await createBrowser();
 
   await page.focus( '[role="tab"]:nth-child(2)' );
-  await page.focus( '[aria-hidden="false"] a' );
+  await page.focus( '[role="tabpanel"]:not([hidden]) a' );
 
   await page.keyboard.down( 'Control' );
   await page.keyboard.press( 'ArrowUp' );
@@ -250,7 +250,7 @@ test( 'Panel navigation', async t => {
 
   t.true( crtlUp, 'La combinaison « Ctrl + Flèche haut » focus l’onglet lié au panneau' );
 
-  await page.focus( '[aria-hidden="false"] a' );
+  await page.focus( '[role="tabpanel"]:not([hidden]) a' );
 
   await page.keyboard.down( 'Control' );
   await page.keyboard.press( 'PageUp' );
@@ -263,7 +263,7 @@ test( 'Panel navigation', async t => {
   t.true( pageUp, 'La combinaison « Ctrl + Page précédente » focus l’onglet précédent' );
 
   await page.focus( '[role="tab"]:nth-child(2)' );
-  await page.focus( '[aria-hidden="false"] a' );
+  await page.focus( '[role="tabpanel"]:not([hidden]) a' );
 
   await page.keyboard.down( 'Control' );
   await page.keyboard.press( 'PageDown' );
@@ -276,7 +276,7 @@ test( 'Panel navigation', async t => {
   t.true( pageDown, 'La combinaison « Ctrl + Page suivante » focus l’onglet suivant' );
 
   await page.focus( '[role="tab"]' );
-  await page.focus( '[aria-hidden="false"] a' );
+  await page.focus( '[role="tabpanel"]:not([hidden]) a' );
 
   await page.keyboard.down( 'Control' );
   await page.keyboard.press( 'PageUp' );
@@ -288,7 +288,7 @@ test( 'Panel navigation', async t => {
 
   t.true( pageUpFirst, 'La combinaison « Ctrl + Page précédente » focus le dernier onglet depuis le premier panneau' );
 
-  await page.focus( '[aria-hidden="false"] a' );
+  await page.focus( '[role="tabpanel"]:not([hidden]) a' );
 
   await page.keyboard.down( 'Control' );
   await page.keyboard.press( 'PageDown' );

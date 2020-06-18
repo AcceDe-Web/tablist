@@ -1,6 +1,6 @@
 /**
  * @accede-web/tablist - WAI-ARIA tablist plugin based on AcceDe Web accessibility guidelines
- * @version v2.0.2
+ * @version v2.1.0
  * @link http://a11y.switch.paris/
  * @license ISC
  **/
@@ -262,7 +262,7 @@
     }
 
     /**
-     * Toggle the `aria-hidden` attribute on the tabpanel based on the passed tab
+     * Toggle the `hidden` attribute on the tabpanel based on the passed tab
      * @param {integer} index - index of the tab
      * @param {boolean} show - whether or not display the panel
      */
@@ -279,9 +279,8 @@
         this._toggleDisplay(this._tablist.openedIndex, false);
       }
 
-      tabPanel.setAttribute('aria-hidden', !show);
-
       if (show) {
+        tabPanel.removeAttribute('hidden');
         this._tablist.openedIndex = index;
 
         if (this._tablist.openedIndex !== undefined) {
@@ -289,6 +288,8 @@
         }
       } else if (this._tablist.openedIndex !== undefined) {
         this._trigger('hide', [tab, tabPanel]);
+
+        tabPanel.setAttribute('hidden', 'hidden');
       }
     }
 
@@ -354,7 +355,10 @@
 
         // set the attributes according the the openedTab status
         tab.setAttribute('tabindex', -1);
-        tabPanel.setAttribute('aria-hidden', !openedTab);
+
+        if (!openedTab) {
+          tabPanel.setAttribute('hidden', 'hidden');
+        }
 
         // subscribe internal events for tab and tap panel
         tab.addEventListener('click', this._handleDisplay);
@@ -438,7 +442,7 @@
 
         tabPanel.removeEventListener('focus', this._handlePanelFocus, true);
         tabPanel.removeEventListener('keydown', this._handlePanel);
-        tabPanel.setAttribute('aria-hidden', 'false');
+        tabPanel.removeAttribute('hidden');
       });
 
       this._tablist = {};

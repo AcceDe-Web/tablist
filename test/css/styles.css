@@ -484,7 +484,7 @@ vim-hybrid theme by w0ng (https://github.com/w0ng/vim-hybrid)
   overflow: hidden;
   transition: height 0.4s;
 }
-.accordion [role=tabpanel][aria-hidden="true"] {
+.accordion [role=tabpanel][hidden] {
     display: none
 }
 .accordion [role=tabpanel] p {
@@ -693,7 +693,7 @@ vim-hybrid theme by w0ng (https://github.com/w0ng/vim-hybrid)
   margin: 0 auto;
   max-width: 56.25rem;
 }
-.tab [role=tabpanel][aria-hidden="true"] {
+.tab [role=tabpanel][hidden] {
   display: none;
 }
 .tab [role=tabpanel] p {
