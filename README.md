@@ -49,10 +49,10 @@ If you wish to open one specific tab when the script starts, just add the `data-
 
 ### CSS
 
-At least a <abbr title="Cascading Style Sheets">CSS</abbr> selector for panels to be hidden when not selected:
+At least a <abbr title="Cascading Style Sheets">CSS</abbr> selector for panels to be hidden when not selected for [legacy browsers](https://caniuse.com/#feat=hidden) compatibility (Internet Explorer < 11>):
 
 ```css
-[role=tabpanel][aria-hidden=true] {
+[role=tabpanel][hidden] {
   display: none;
 }
 ```
